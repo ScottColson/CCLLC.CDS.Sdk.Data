@@ -1,0 +1,82 @@
+﻿# Add steps that publish symbols, save build artifacts, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+name: '$(Build.SourceBranchName)$(rev:.r)'
+
+trigger:
+- release/*
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  solution: '**/**.sln'
+  buildPlatform: 'Any CPU'
+  buildConfiguration: 'Release'
+  Version.Revision: '$(Build.SourceBranchName)'
+  Version.Formatted: '$(Build.BuildNumber)'
+
+steps:
+- task: NuGetToolInstaller@1
+      
+- task: NuGetCommand@2
+  displayName: 'NuGet Solution Restore'
+  inputs:
+    command: 'restore'
+    restoreSolution: '$(solution)'
+    feedsToUse: 'select'
+    vstsFeed: '02f8f4cb-c470-4245-b6af-fc113a1b1a31/0c78ec44-f27d-447b-8b61-92dd484153d7'
+
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: VSTest@2
+  inputs:
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet Pack Source Artifact Package'
+  inputs:
+    command: 'pack'
+    packagesToPack: 'CCLLC.CDS.Sdk.Data/sourcecode.nuspec'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'Version.Formatted'
+
+task: NuGetCommand@2
+  displayName: 'NuGet Pack Assembly Artifact Package'
+  inputs:
+    command: 'pack'
+    packagesToPack: 'CCLLC.CDS.Sdk.Data/assembly.nuspec'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'Version.Formatted'
+- 
+task: NuGetAuthenticate@0
+  displayName: 'NuGet Authenticate'
+
+- task: NuGetCommand@2
+  displayName: 'NuGet Push Artifact Packages'
+  condition: and(succeeded(), contains(variables['Build.SourceBranch'], 'refs/heads/release'))
+  inputs:
+    command: 'push'   
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    nuGetFeedType: 'internal'
+    publishVstsFeed: '02f8f4cb-c470-4245-b6af-fc113a1b1a31/0c78ec44-f27d-447b-8b61-92dd484153d7'
+
+
+- task: CopyFiles@2
+  displayName: 'Copy DevOps Artifacts to Artifact Staging'
+  inputs:
+    sourceFolder: '$(Build.SourcesDirectory)'
+    contents: 'DeploymentPackage/temp/packed/?(*.zip)'
+    targetFolder: '$(Build.ArtifactStagingDirectory)'
+    flattenFolders: true
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish Build Artifacts to Pipeline'
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+    ArtifactName: 'drop'
+    publishLocation: 'Container'
