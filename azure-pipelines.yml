@@ -41,6 +41,15 @@ steps:
 
 - task: NuGetCommand@2
   displayName: 'NuGet Pack Source Artifact Package'
+- task: VSBuild@1
+  inputs:
+    solution: '$(solution)'
+    vsVersion: '15.0'
+    platform: '$(buildPlatform)'
+    configuration: '$(buildConfiguration)'
+    createLogFile: true
+
+- task: NuGetCommand@2
   inputs:
     command: 'pack'
     packagesToPack: '**/sourcecode.nuspec'
