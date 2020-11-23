@@ -122,13 +122,15 @@ csharp_preserve_single_line_blocks = true
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
 
-dotnet_code_quality.CA1062.excluded_symbol_names = CCLLC.CDS.Sdk.AttributeEqualityComparer
 
 # Default severity for analyzer diagnostics with category 'Globalization'
 dotnet_analyzer_diagnostic.category-Globalization.severity = none
 
 # Default severity for analyzer diagnostics with category 'Naming'
 dotnet_analyzer_diagnostic.category-Naming.severity = none
+
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = none
 
 [*.vb]
 # Modifier preferences

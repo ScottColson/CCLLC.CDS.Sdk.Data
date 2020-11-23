@@ -13,7 +13,7 @@
     <dependencies/>      
   </metadata>
   <files>
-    <file src="bin\Release\**\CCLLCCdsSdkData.dll" target="lib" />
-    <file src="bin\Release\**\CCLLCCdsSdkDatapdb" target="lib" />
+    <file src="bin\Release\**\CcllcCdsSdkData.dll" target="lib" />
+    <file src="bin\Release\**\CcllcCdsSdkDatapdb" target="lib" />
   </files>
 </package>

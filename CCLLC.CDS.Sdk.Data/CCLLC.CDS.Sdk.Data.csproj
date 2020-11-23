@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>CCLLCCDSSdkData</AssemblyName>
+    <AssemblyName>CcllcCdsSdkData</AssemblyName>
     <RootNamespace>CCLLC.CDS.Sdk.Data</RootNamespace>
     <ProjectGuid>{642D436F-0839-444F-8FD4-955205F98564}</ProjectGuid>
   </PropertyGroup>
@@ -26,6 +26,9 @@
     <SignAssembly>true</SignAssembly>
     <OutputType>Library</OutputType>
     <RunAnalyzersDuringBuild>true</RunAnalyzersDuringBuild>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
   </PropertyGroup>
 
 
@@ -52,10 +55,6 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.20" />
   </ItemGroup>
 

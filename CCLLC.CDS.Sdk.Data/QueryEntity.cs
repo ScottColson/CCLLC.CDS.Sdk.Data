@@ -17,7 +17,8 @@ namespace CCLLC.CDS.Sdk
 
         protected QueryEntity() : base()
         {
-            RecordType = new E().LogicalName;
+            var record = new E();
+            RecordType = record.LogicalName;
             Columnsets = new List<IList<string>>();
             LinkEntities = new List<LinkEntity>();
             OrderExpressions = new List<OrderExpression>();

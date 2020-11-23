@@ -7,7 +7,6 @@ using System.Diagnostics.CodeAnalysis;
 
 [assembly: SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IFluentQuery")]
 [assembly: SuppressMessage("Design", "CA1040:Avoid empty interfaces", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IQueryEntity")]
-[assembly: SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "<Pending>", Scope = "member", Target = "~M:CCLLC.CDS.Sdk.JoinedEntity`3.CCLLC#CDS#Sdk#IJoinedEntitySettings<P,E,RE>#Alias(System.String)~CCLLC.CDS.Sdk.IJoinedEntity{`0,`1,`2}")]
 [assembly: SuppressMessage("Naming", "CA1715:Identifiers should have correct prefix", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IJoinedEntity`3")]
 [assembly: SuppressMessage("Naming", "CA1715:Identifiers should have correct prefix", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.FluentQuery`2")]
 [assembly: SuppressMessage("Naming", "CA1715:Identifiers should have correct prefix", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IFluentQuery`2")]
@@ -19,8 +18,6 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IJoinedEntity`3")]
 [assembly: SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.IJoinedEntitySettings`3")]
 [assembly: SuppressMessage("Design", "CA1005:Avoid excessive parameters on generic types", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.JoinedEntity`3")]
-[assembly: SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "<Pending>", Scope = "member", Target = "~M:CCLLC.CDS.Sdk.JoinedEntity`3.CCLLC#CDS#Sdk#IJoinedEntitySettings<P,E,RE>#Alias(System.String)~CCLLC.CDS.Sdk.IJoinedEntity{`0,`1,`2}")]
-[assembly: SuppressMessage("Design", "CA1033:Interface methods should be callable by child types", Justification = "<Pending>", Scope = "member", Target = "~M:CCLLC.CDS.Sdk.JoinedEntity`3.CCLLC#CDS#Sdk#IJoinedEntitySettings<P,E,RE>#Alias(System.String)~CCLLC.CDS.Sdk.IJoinedEntity{`0,`1,`2}")]
 [assembly: SuppressMessage("Naming", "CA1715:Identifiers should have correct prefix", Justification = "<Pending>", Scope = "type", Target = "~T:CCLLC.CDS.Sdk.Filter`1")]
 [assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>", Scope = "member", Target = "~M:CCLLC.CDS.Sdk.IJoinedEntitySettings`3.Alias(System.String)~CCLLC.CDS.Sdk.IJoinedEntity{`0,`1,`2}")]
 [assembly: SuppressMessage("Naming", "CA1716:Identifiers should not match keywords", Justification = "<Pending>", Scope = "member", Target = "~M:CCLLC.CDS.Sdk.IQueryEntity`2.Select(System.String[])~`0")]

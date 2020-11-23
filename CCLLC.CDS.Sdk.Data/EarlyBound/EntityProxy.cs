@@ -57,7 +57,7 @@ namespace CCLLC.CDS.Sdk.EarlyBound
             return this.ToEntity<T>();
         }
 
-        new public T GetChangedEntity()
+        public new T GetChangedEntity()
         {
             return base.GetChangedEntity().ToEntity<T>();
         }
@@ -69,12 +69,12 @@ namespace CCLLC.CDS.Sdk.EarlyBound
         public event PropertyChangedEventHandler PropertyChanged;
         public event PropertyChangingEventHandler PropertyChanging;
 
-        Dictionary<string,object> changedValues = new Dictionary<string, object>();
-        Dictionary<string,eTextOption> textOptions = new Dictionary<string, eTextOption>();
-        Dictionary<string,eNumberOption> numberOptions = new Dictionary<string, eNumberOption>();
-        Dictionary<string, string> errorText = new Dictionary<string, string>();
+        readonly Dictionary<string,object> changedValues = new Dictionary<string, object>();
+        readonly Dictionary<string,eTextOption> textOptions = new Dictionary<string, eTextOption>();
+        readonly Dictionary<string,eNumberOption> numberOptions = new Dictionary<string, eNumberOption>();
+        readonly Dictionary<string, string> errorText = new Dictionary<string, string>();
 
-        AttributeEqualityComparer _equalityComparer = new AttributeEqualityComparer();
+        readonly AttributeEqualityComparer _equalityComparer = new AttributeEqualityComparer();
 
         public bool IsDirty => this.changedValues.Count > 0;
         public eNumberOption NumberOption { get; set; } = eNumberOption.ThrowError;
@@ -99,7 +99,7 @@ namespace CCLLC.CDS.Sdk.EarlyBound
             this.Attributes.AddRange(original.Attributes);
             this.EntityState = original.EntityState;
 
-            if (original.Id != default(Guid))
+            if (original.Id != default)
             {
                 base.Id = original.Id;
             }            
@@ -116,7 +116,7 @@ namespace CCLLC.CDS.Sdk.EarlyBound
 
         public void Save(IOrganizationService service)
         {
-            if (this.Id != default(Guid)) {
+            if (this.Id != default) {
                 this.Update(service); }
             else {
                 this.Create(service); }
@@ -152,8 +152,8 @@ namespace CCLLC.CDS.Sdk.EarlyBound
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1024:Use properties where appropriate", Justification = "Breaking Change")]
         public Entity GetChangedEntity()
         {
-            var entity = new Entity(this.LogicalName);
-            entity.Id = this.Id;
+            var entity = new Entity(this.LogicalName, this.Id);
+            
             foreach (string attributeName in changedValues.Keys)
                 entity.Attributes[attributeName] = this.Attributes[attributeName];
             return entity;
@@ -171,7 +171,7 @@ namespace CCLLC.CDS.Sdk.EarlyBound
             {
                 return (T)this.Attributes[name];
             }
-            return default(T);
+            return default;
         }
         
         public void SetPropertyValue<T>(string name, T value)

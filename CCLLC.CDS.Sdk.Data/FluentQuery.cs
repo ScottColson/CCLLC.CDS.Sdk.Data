@@ -53,13 +53,15 @@ namespace CCLLC.CDS.Sdk
         {
             E baseRecord = new E();
 
-            var qryExpression = new QueryExpression(baseRecord.LogicalName);
-           
-            qryExpression.NoLock = Settings.UseNoLock;
-            qryExpression.TopCount = Settings.TopCount;
-            qryExpression.Distinct = Settings.Distinct;
-            qryExpression.ColumnSet = GetColumnSet();
-            qryExpression.Criteria = GetFilterExpression();
+            var qryExpression = new QueryExpression(baseRecord.LogicalName)
+            {
+                NoLock = Settings.UseNoLock,
+                TopCount = Settings.TopCount,
+                Distinct = Settings.Distinct,
+                ColumnSet = GetColumnSet(),
+                Criteria = GetFilterExpression()
+            };
+
             qryExpression.LinkEntities.AddRange(LinkEntities);
             qryExpression.Orders.AddRange(OrderExpressions);
 

@@ -8,7 +8,7 @@ namespace CCLLC.CDS.Sdk
 {
     public class JoinedEntity<P, E, RE> : QueryEntity<IJoinedEntity<P, E, RE>, RE>, IJoinedEntity<P, E, RE>, IJoinedEntitySettings<P, E, RE> where P : IQueryEntity<P, E> where E : Entity, new() where RE : Entity, new()
     {
-        protected string Alias { get; private set; }
+        protected string JoinAlias { get; private set; }
         protected JoinOperator JoinOperator { get; }
         protected string ParentEntity { get; }
         protected string ParentAttribute { get; }
@@ -27,13 +27,14 @@ namespace CCLLC.CDS.Sdk
         }
 
         public LinkEntity ToLinkEntity()
-        { 
-            var linkEntity = new LinkEntity(ParentEntity, RelatedEntity, ParentAttribute, RelatedAttribute, JoinOperator);
+        {
+            var linkEntity = new LinkEntity(ParentEntity, RelatedEntity, ParentAttribute, RelatedAttribute, JoinOperator)
+            {
+                EntityAlias = string.IsNullOrEmpty(JoinAlias) ? RelatedEntity : JoinAlias,
+                Columns = GetColumnSet(),
+                LinkCriteria = GetFilterExpression()
+            };
 
-            linkEntity.EntityAlias = string.IsNullOrEmpty(Alias) ? RelatedEntity : Alias;
-
-            linkEntity.Columns = GetColumnSet();
-            linkEntity.LinkCriteria = GetFilterExpression();
             linkEntity.LinkEntities.AddRange(LinkEntities);
             linkEntity.Orders.AddRange(OrderExpressions);
 
@@ -41,11 +42,10 @@ namespace CCLLC.CDS.Sdk
             
         }
 
-#pragma warning disable CA1033 // Interface methods should be callable by child types
-        IJoinedEntity<P, E, RE> IJoinedEntitySettings<P, E, RE>.Alias(string aliasName)
-#pragma warning restore CA1033 // Interface methods should be callable by child types
+
+        public IJoinedEntity<P, E, RE> Alias(string aliasName)
         {
-            this.Alias = aliasName;
+            this.JoinAlias = aliasName;
             return this;
         }
     }
