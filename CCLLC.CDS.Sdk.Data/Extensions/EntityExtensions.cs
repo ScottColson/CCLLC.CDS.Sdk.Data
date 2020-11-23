@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -19,16 +19,16 @@ namespace CCLLC.CDS.Sdk
         /// Checks the target for existence of any attribute contained in the provided array of attribute names and returns
         /// true if at least one of the provided attributes exists.
         /// </summary>
-        /// <param name="Target"></param>
-        /// <param name="AttributeNames"></param>
+        /// <param name="target"></param>
+        /// <param name="attributeNames"></param>
         /// <returns></returns>
-        public static bool ContainsAny(this Entity Target, params string[] AttributeNames)
+        public static bool ContainsAny(this Entity target, params string[] attributeNames)
         {
-            if (AttributeNames != null)
+            if (attributeNames != null)
             {
-                foreach (string a in AttributeNames)
+                foreach (string a in attributeNames)
                 {
-                    if (Target.Contains(a))
+                    if (target.Contains(a))
                     {
                         return true;
                     }
@@ -43,13 +43,13 @@ namespace CCLLC.CDS.Sdk
         /// define the field list.
         /// </summary>
         /// <typeparam name="E"></typeparam>
-        /// <param name="Target"></param>
+        /// <param name="target"></param>
         /// <param name="anonymousTypeInitializer"></param>
         /// <returns></returns>
-        public static bool ContainsAny<E>(this E Target, Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
+        public static bool ContainsAny<E>(this E target, Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
         {
             var columns = anonymousTypeInitializer.GetAttributeNamesArray<E>();
-            return Target.ContainsAny(columns);
+            return target.ContainsAny(columns);
         }
 
         /// <summary>
@@ -57,29 +57,29 @@ namespace CCLLC.CDS.Sdk
         /// optionally specified default value if the attribute does not exist.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="Target"></param>
-        /// <param name="Key"></param>
-        /// <param name="DefaultValue"></param>
+        /// <param name="target"></param>
+        /// <param name="key"></param>
+        /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public static T GetValue<T>(this Entity Target, string Key, T DefaultValue = default(T))
+        public static T GetValue<T>(this Entity target, string key, T defaultValue = default)
         {
-            if (!Target.Contains(Key) || Target[Key] is null)
+            if (!target.Contains(key) || target[key] is null)
             {
-                return DefaultValue;
+                return defaultValue;
             }
             
-            return Target.GetAttributeValue<T>(Key);            
+            return target.GetAttributeValue<T>(key);            
         }
 
 
-        public static T GetAliasedValue<T>(this Entity target, string alias, string fieldName, T defaultValue = default(T))
+        public static T GetAliasedValue<T>(this Entity target, string alias, string fieldName, T defaultValue = default)
         {
             string key = string.Format("{0}.{1}", alias, fieldName);
             return target.GetAliasedValue<T>(key, defaultValue);
             
         }
 
-        public static T GetAliasedValue<T>(this Entity target, string key, T defaultValue = default(T))
+        public static T GetAliasedValue<T>(this Entity target, string key, T defaultValue = default)
         {            
             if (!target.Contains(key) || target[key] is null)
             {
@@ -156,13 +156,13 @@ namespace CCLLC.CDS.Sdk
         /// <summary>
         /// Removes an attribute from the entity attribute collection if that attribute exists.
         /// </summary>
-        /// <param name="Target"></param>
-        /// <param name="AttributeName"></param>
-        public static void RemoveAttribute(this Entity Target, string AttributeName)
+        /// <param name="target"></param>
+        /// <param name="attributeName"></param>
+        public static void RemoveAttribute(this Entity target, string attributeName)
         {
-            if (Target.Contains(AttributeName))
+            if (target.Contains(attributeName))
             {
-                Target.Attributes.Remove(AttributeName);
+                target.Attributes.Remove(attributeName);
             }
         }
 
@@ -197,9 +197,9 @@ namespace CCLLC.CDS.Sdk
         public static OptionMetadata GetOptionMetadata(this OptionSetValue value, IOrganizationService service, Entity entity, string attributeLogicalName)
         {
             var attributeMeta = service.GetAttributeMetadata(entity.LogicalName, attributeLogicalName);
-            if (attributeMeta is EnumAttributeMetadata)
-                return ((EnumAttributeMetadata)attributeMeta).GetOptionMetadata(value.Value);
-            else { throw new Exception("The attribute is not an Enum type attribute"); }
+            return attributeMeta is EnumAttributeMetadata metadata
+                ? metadata.GetOptionMetadata(value.Value)
+                : throw new Exception("The attribute is not an Enum type attribute");
         }
 
         public static OptionMetadata GetOptionMetadata(this EnumAttributeMetadata enumMeta, int value)
