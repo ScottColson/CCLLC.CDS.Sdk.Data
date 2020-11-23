@@ -3,8 +3,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.Xrm.Sdk;
-using Microsoft.Xrm.Sdk.Client;
-
 
 namespace CCLLC.CDS.Sdk
 {
@@ -25,6 +23,8 @@ namespace CCLLC.CDS.Sdk
         /// <exception cref="System.ArgumentException">lambda must return an object initializer</exception>
         public static string[] GetAttributeNamesArray<T>(this Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
+            _ = anonymousTypeInitializer ?? throw new ArgumentNullException(nameof(anonymousTypeInitializer));
+           
             var initializer = anonymousTypeInitializer.Body as NewExpression;
             if (initializer?.Members == null)
             {
@@ -43,6 +43,8 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         private static string GetLogicalAttributeName<T>(MemberInfo property) where T : Entity
         {
+            _ = property ?? throw new ArgumentNullException(nameof(property));
+
             var name = property.Name;
             var attribute = typeof(T).GetProperty(name)?.GetCustomAttributes<AttributeLogicalNameAttribute>().FirstOrDefault();
             
@@ -60,6 +62,8 @@ namespace CCLLC.CDS.Sdk
         public static TAttribute GetClassAttribute<TAttribute>(this Type type)
             where TAttribute : Attribute
         {
+            _ = type ?? throw new ArgumentNullException(nameof(type));
+           
             return type.GetCustomAttributes(typeof(TAttribute), true).FirstOrDefault() as TAttribute;
         }
 

@@ -15,6 +15,8 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public static IExecutableFluentQuery<E> Query<E>(this IOrganizationService organizationService) where E : Entity, new()
         {
+            _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+           
             var query = new ExecutableFluentQuery<E>(organizationService);
             return query;
         }
@@ -24,6 +26,10 @@ namespace CCLLC.CDS.Sdk
         /// </summary>        
         public static T GetRecord<T>(this IOrganizationService organizationService, EntityReference recordId, Expression<Func<T, object>> anonymousTypeInitializer) where T : Entity
         {
+            _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _ = recordId ?? throw new ArgumentNullException(nameof(recordId));
+            _ = anonymousTypeInitializer ?? throw new ArgumentNullException(nameof(anonymousTypeInitializer));
+            
             var columns = anonymousTypeInitializer.GetAttributeNamesArray<T>();
 
             return organizationService.GetRecord<T>(recordId, columns);
@@ -34,6 +40,9 @@ namespace CCLLC.CDS.Sdk
         /// </summary> 
         public static T GetRecord<T>(this IOrganizationService organizationService, EntityReference recordId, params string[] columns) where T : Entity
         {
+            _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _ = recordId ?? throw new ArgumentNullException(nameof(recordId));
+
             return organizationService.GetRecord(recordId, columns).ToEntity<T>();
         }
 
@@ -42,6 +51,9 @@ namespace CCLLC.CDS.Sdk
         /// </summary> 
         public static Entity GetRecord(this IOrganizationService organizationService, EntityReference recordId, params string[] columns)
         {
+            _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
+            _ = recordId ?? throw new ArgumentNullException(nameof(recordId));
+
             var columnSet = (columns == null || columns.Length == 0) ? new ColumnSet(true) : new ColumnSet(columns);
 
             var record = organizationService.Retrieve(

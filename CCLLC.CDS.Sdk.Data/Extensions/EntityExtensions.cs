@@ -24,6 +24,8 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public static bool ContainsAny(this Entity target, params string[] attributeNames)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+
             if (attributeNames != null)
             {
                 foreach (string a in attributeNames)
@@ -48,6 +50,9 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public static bool ContainsAny<E>(this E target, Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = anonymousTypeInitializer ?? throw new ArgumentNullException(nameof(anonymousTypeInitializer));
+
             var columns = anonymousTypeInitializer.GetAttributeNamesArray<E>();
             return target.ContainsAny(columns);
         }
@@ -74,13 +79,20 @@ namespace CCLLC.CDS.Sdk
 
         public static T GetAliasedValue<T>(this Entity target, string alias, string fieldName, T defaultValue = default)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = alias ?? throw new ArgumentNullException(nameof(alias));
+            _ = fieldName ?? throw new ArgumentNullException(nameof(fieldName));
+
             string key = string.Format("{0}.{1}", alias, fieldName);
             return target.GetAliasedValue<T>(key, defaultValue);
             
         }
 
         public static T GetAliasedValue<T>(this Entity target, string key, T defaultValue = default)
-        {            
+        {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+
             if (!target.Contains(key) || target[key] is null)
             {
                 return defaultValue;
@@ -101,6 +113,8 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public static T GetAliasedEntity<T>(this Entity target, string alias = null) where T : Entity, new()
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+           
             T record = new T();
             var idattribute = record.LogicalName + "id";
 
@@ -139,17 +153,18 @@ namespace CCLLC.CDS.Sdk
         /// <param name="copyFrom"></param>
         public static void MergeWith(this Entity copyTo, Entity copyFrom)
         {
-            if (copyTo != null && copyFrom != null)
+            _ = copyTo ?? throw new ArgumentNullException(nameof(copyTo));
+            _ = copyFrom ?? throw new ArgumentNullException(nameof(copyFrom));
+
+            copyFrom.Attributes.ToList().ForEach(a =>
             {
-                copyFrom.Attributes.ToList().ForEach(a =>
+                // don't overwrite existing fields in copyTo
+                if (!copyTo.Attributes.ContainsKey(a.Key))
                 {
-                    // if it already exists then don't copy
-                    if (!copyTo.Attributes.ContainsKey(a.Key))
-                    {
-                        copyTo.Attributes.Add(a.Key, a.Value);
-                    }
-                });
-            }
+                    copyTo.Attributes.Add(a.Key, a.Value);
+                }
+            });
+
         }
 
 
@@ -160,6 +175,9 @@ namespace CCLLC.CDS.Sdk
         /// <param name="attributeName"></param>
         public static void RemoveAttribute(this Entity target, string attributeName)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = attributeName ?? throw new ArgumentNullException(nameof(attributeName));
+
             if (target.Contains(attributeName))
             {
                 target.Attributes.Remove(attributeName);
@@ -168,34 +186,51 @@ namespace CCLLC.CDS.Sdk
 
         public static void SetState(this IOrganizationService service, Entity target, int state, int status)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+           
             service.SetState(target, new OptionSetValue(state), new OptionSetValue(status));
         }
 
         public static void SetState(this IOrganizationService service, Entity target, OptionSetValue state, OptionSetValue status)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = state ?? throw new ArgumentNullException(nameof(state));
+            _ = status ?? throw new ArgumentNullException(nameof(status));
+
             var request = new SetStateRequest() { EntityMoniker = target.ToEntityReference(), State = state, Status = status };
             service.Execute(request);
         }
 
         public static Entity ToEntity(this EntityReference reference)
         {
-            if (reference == null) { return null; }
+            _ = reference ?? throw new ArgumentNullException(nameof(reference));
+                       
             return new Entity() { LogicalName = reference.LogicalName, Id = reference.Id };
         }
 
         public static T ToEntity<T>(this EntityReference reference) where T : Entity
         {
+            _ = reference ?? throw new ArgumentNullException(nameof(reference));
+
             return reference.ToEntity().ToEntity<T>();
         }
 
         public static AttributeMetadata GetAttributeMetadata(this IOrganizationService service, string entityLogicalName, string attributeLogicalName)
         {
+            _ = service ?? throw new ArgumentNullException(nameof(service));
+            _ = entityLogicalName ?? throw new ArgumentNullException(nameof(entityLogicalName));
+            _ = attributeLogicalName ?? throw new ArgumentNullException(nameof(attributeLogicalName));
+
             var request = new RetrieveAttributeRequest() { EntityLogicalName = entityLogicalName, LogicalName = attributeLogicalName };
             return (service.Execute(request) as RetrieveAttributeResponse).AttributeMetadata;
         }
 
         public static OptionMetadata GetOptionMetadata(this OptionSetValue value, IOrganizationService service, Entity entity, string attributeLogicalName)
         {
+            _ = service ?? throw new ArgumentNullException(nameof(service));
+            _ = entity ?? throw new ArgumentNullException(nameof(entity));
+            _ = attributeLogicalName ?? throw new ArgumentNullException(nameof(attributeLogicalName));
+
             var attributeMeta = service.GetAttributeMetadata(entity.LogicalName, attributeLogicalName);
             return attributeMeta is EnumAttributeMetadata metadata
                 ? metadata.GetOptionMetadata(value.Value)
@@ -204,33 +239,47 @@ namespace CCLLC.CDS.Sdk
 
         public static OptionMetadata GetOptionMetadata(this EnumAttributeMetadata enumMeta, int value)
         {
+            _ = enumMeta ?? throw new ArgumentNullException(nameof(enumMeta));
+            
             return (from meta in enumMeta.OptionSet.Options where meta.Value == value select meta).FirstOrDefault();
         }
 
         public static string GetOptionSetText(this EnumAttributeMetadata enumMeta, int value)
         {
+            _ = enumMeta ?? throw new ArgumentNullException(nameof(enumMeta));
+
             return enumMeta.GetOptionMetadata(value).GetOptionSetText();
         }
 
         public static string GetOptionSetText(this OptionSetValue value, IOrganizationService service, Entity entity, string attributeLogicalName)
         {
+            _ = value ?? throw new ArgumentNullException(nameof(value));
+            _ = service ?? throw new ArgumentNullException(nameof(service));
+            _ = entity ?? throw new ArgumentNullException(nameof(entity));
+            _ = attributeLogicalName ?? throw new ArgumentNullException(nameof(attributeLogicalName));
+
             var optionMeta = GetOptionMetadata(value, service, entity, attributeLogicalName);
             return optionMeta.GetOptionSetText();
         }
 
         public static string GetOptionSetText(this OptionMetadata optionMeta)
         {
-            if (optionMeta != null && optionMeta.Label != null && optionMeta.Label.UserLocalizedLabel != null) { return optionMeta.Label.UserLocalizedLabel.Label; }
+            _ = optionMeta ?? throw new ArgumentNullException(nameof(optionMeta));
+            if (optionMeta.Label != null && optionMeta.Label.UserLocalizedLabel != null) { return optionMeta.Label.UserLocalizedLabel.Label; }
             return string.Empty;
         }
 
         public static List<T> ToList<T>(this EntityCollection entities) where T : Entity
         {
+            _ = entities ?? throw new ArgumentNullException(nameof(entities));
+
             return entities.Entities.ToList<T>();
         }
 
         public static List<T> ToList<T>(this IEnumerable<Entity> entities) where T : Entity
         {
+            _ = entities ?? throw new ArgumentNullException(nameof(entities));
+
             return (from entity in entities select entity.ToEntity<T>()).ToList();
         }
 
