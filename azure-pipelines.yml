@@ -1,4 +1,4 @@
-﻿# Add steps that publish symbols, save build artifacts, and more:
+# Add steps that publish symbols, save build artifacts, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 name: '$(Build.SourceBranchName)$(rev:.r)'
 
@@ -24,7 +24,7 @@ steps:
     command: 'restore'
     restoreSolution: '$(solution)'
     feedsToUse: 'select'
-    vstsFeed: '02f8f4cb-c470-4245-b6af-fc113a1b1a31/0c78ec44-f27d-447b-8b61-92dd484153d7'
+    vstsFeed: 'a7d65a82-d7f9-47d1-8ba7-67494a34d32f'
 
 - task: VSBuild@1
   inputs:
@@ -41,29 +41,26 @@ steps:
   displayName: 'NuGet Pack Source Artifact Package'
   inputs:
     command: 'pack'
-    packagesToPack: 'CCLLC.CDS.Sdk.Data/sourcecode.nuspec'
-    versioningScheme: 'byEnvVar'
-    versionEnvVar: 'Version.Formatted'
+    packagesToPack: '**/sourcecode.nuspec'
+    versioningScheme: 'byBuildNumber'
 
-task: NuGetCommand@2
-  displayName: 'NuGet Pack Assembly Artifact Package'
+- task: NuGetCommand@2
   inputs:
     command: 'pack'
-    packagesToPack: 'CCLLC.CDS.Sdk.Data/assembly.nuspec'
-    versioningScheme: 'byEnvVar'
-    versionEnvVar: 'Version.Formatted'
-- 
-task: NuGetAuthenticate@0
+    packagesToPack: '**/assembly.nuspec'
+    versioningScheme: 'byBuildNumber'
+
+- task: NuGetAuthenticate@0
   displayName: 'NuGet Authenticate'
 
 - task: NuGetCommand@2
   displayName: 'NuGet Push Artifact Packages'
   condition: and(succeeded(), contains(variables['Build.SourceBranch'], 'refs/heads/release'))
   inputs:
-    command: 'push'   
+    command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
-    nuGetFeedType: 'internal'
-    publishVstsFeed: '02f8f4cb-c470-4245-b6af-fc113a1b1a31/0c78ec44-f27d-447b-8b61-92dd484153d7'
+    nuGetFeedType: 'external'
+    publishFeedCredentials: 'Colson Code Nuget'
 
 
 - task: CopyFiles@2
