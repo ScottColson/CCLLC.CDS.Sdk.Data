@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <Dictionary>
-  <Words>
-    <Recognized>
-      <Word>CCLLC</Word>
-	  <Word>CDS</Word>
-    </Recognized>
-  </Words>
+  <Acronyms>
+    <CasingExceptions>
+      <Acronym>CDS</Acronym>   <!-- Common Data Store -->
+      <Acronym>CCLLC</Acronym> <!-- Colson Code LLC -->
+    </CasingExceptions>
+  </Acronyms>
 </Dictionary>
