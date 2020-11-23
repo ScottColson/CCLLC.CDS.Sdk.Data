@@ -127,6 +127,9 @@ dotnet_code_quality.CA1062.excluded_symbol_names = CCLLC.CDS.Sdk.AttributeEquali
 # Default severity for analyzer diagnostics with category 'Globalization'
 dotnet_analyzer_diagnostic.category-Globalization.severity = none
 
+# Default severity for analyzer diagnostics with category 'Naming'
+dotnet_analyzer_diagnostic.category-Naming.severity = none
+
 [*.vb]
 # Modifier preferences
 visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public,Friend,NotOverridable,Overridable,MustOverride,Overloads,Overrides,MustInherit,NotInheritable,Static,Shared,Shadows,ReadOnly,WriteOnly,Dim,Const,WithEvents,Widening,Narrowing,Custom,Async:suggestion

@@ -5,11 +5,11 @@ namespace CCLLC.CDS.Sdk
 {
     public class AttributeEqualityComparer : IAttributeEqualityComparer
     {
-        
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "<Pending>")]
         public new bool Equals(object x, object y)
         {
-            if ((x is null || (x.GetType() == typeof(string) && string.IsNullOrEmpty(x as string)))
-                && (y is null || (y.GetType() == typeof(string) && string.IsNullOrEmpty(y as string))))
+            if ((x is null || (x.GetType() == typeof(string) && (x as string).Length == 0))
+                && (y is null || (y.GetType() == typeof(string) && (y as string).Length == 0)))
                 return true;
 
             if (x is null && y != null

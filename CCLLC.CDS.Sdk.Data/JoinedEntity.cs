@@ -41,7 +41,9 @@ namespace CCLLC.CDS.Sdk
             
         }
 
+#pragma warning disable CA1033 // Interface methods should be callable by child types
         IJoinedEntity<P, E, RE> IJoinedEntitySettings<P, E, RE>.Alias(string aliasName)
+#pragma warning restore CA1033 // Interface methods should be callable by child types
         {
             this.Alias = aliasName;
             return this;

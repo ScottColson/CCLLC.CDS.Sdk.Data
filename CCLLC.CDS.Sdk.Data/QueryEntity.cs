@@ -26,6 +26,8 @@ namespace CCLLC.CDS.Sdk
 
         public P LeftJoin<RE>(string fromAttributeName, string toAttributeName, Action<IJoinedEntity<P, E, RE>> expression) where RE : Entity, new()
         {
+            _ = expression ?? throw new ArgumentNullException(nameof(expression));
+
             var relatedRecordType = new RE().LogicalName;
 
             var joinEntity = new JoinedEntity<P,E, RE>(JoinOperator.LeftOuter, RecordType, fromAttributeName, relatedRecordType, toAttributeName);
@@ -38,6 +40,8 @@ namespace CCLLC.CDS.Sdk
 
         public P InnerJoin<RE>(string fromAttributeName, string toAttributeName, Action<IJoinedEntity<P, E, RE>> expression) where RE : Entity, new()
         {
+            _ = expression ?? throw new ArgumentNullException(nameof(expression));
+
             var relatedRecordType = new RE().LogicalName;
 
             var joinEntity = new JoinedEntity<P, E ,RE>(JoinOperator.Inner, RecordType, fromAttributeName, relatedRecordType, toAttributeName);

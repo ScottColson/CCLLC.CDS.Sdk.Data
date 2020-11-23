@@ -20,16 +20,20 @@ namespace CCLLC.CDS.Sdk
 
         public virtual P WhereAll(Action<IFilter<P>> expression)
         {
+            _ = expression ?? throw new ArgumentNullException(nameof(expression));
+
             var filter = new Filter<P>(Parent, LogicalOperator.And);
             expression(filter);
             this.Filters.Add(filter.ToFilterExpression());
             return (P)Parent;
         }
 
-        public virtual P WhereAny(Action<IFilter<P>> experssion)
+        public virtual P WhereAny(Action<IFilter<P>> expression)
         {
+            _ = expression ?? throw new ArgumentNullException(nameof(expression));
+
             var filter = new Filter<P>(Parent, LogicalOperator.Or);
-            experssion(filter);
+            expression(filter);
             this.Filters.Add(filter.ToFilterExpression());
             return (P)Parent;
         }
