@@ -10,14 +10,14 @@ namespace CCLLC.CDS.Sdk
         /// <summary>
         /// Execute a Fluent Query.
         /// </summary>
-        /// <typeparam name="E"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="organizationService"></param>
         /// <returns></returns>
-        public static IExecutableFluentQuery<E> Query<E>(this IOrganizationService organizationService) where E : Entity, new()
+        public static IExecutableFluentQuery<TEntity> Query<TEntity>(this IOrganizationService organizationService) where TEntity : Entity, new()
         {
             _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
            
-            var query = new ExecutableFluentQuery<E>(organizationService);
+            var query = new ExecutableFluentQuery<TEntity>(organizationService);
             return query;
         }
 
@@ -54,7 +54,7 @@ namespace CCLLC.CDS.Sdk
             _ = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
             _ = recordId ?? throw new ArgumentNullException(nameof(recordId));
 
-            var columnSet = (columns == null || columns.Length == 0) ? new ColumnSet(true) : new ColumnSet(columns);
+            var columnSet = (columns.Length == 0) ? new ColumnSet(true) : new ColumnSet(columns);
 
             var record = organizationService.Retrieve(
                 recordId.LogicalName,

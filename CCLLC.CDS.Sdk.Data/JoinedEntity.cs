@@ -17,7 +17,7 @@ namespace CCLLC.CDS.Sdk
 
         public IJoinedEntitySettings<P, E, RE> With => this;
 
-        public JoinedEntity(JoinOperator joinOperator, string parentEntityName, string parentAttributeName, string relatedEntityName, string relatedAttributeName, IQueryEntity<P,E> parent) : base() 
+        public JoinedEntity(JoinOperator joinOperator, string parentEntityName, string parentAttributeName, string relatedEntityName, string relatedAttributeName) : base() 
         {
             this.JoinOperator = joinOperator;
             this.ParentEntity = parentEntityName;
@@ -27,9 +27,7 @@ namespace CCLLC.CDS.Sdk
         }
 
         public LinkEntity ToLinkEntity()
-        {            
-            var relatedRecordType = new RE().LogicalName;
-
+        { 
             var linkEntity = new LinkEntity(ParentEntity, RelatedEntity, ParentAttribute, RelatedAttribute, JoinOperator);
 
             linkEntity.EntityAlias = string.IsNullOrEmpty(Alias) ? RelatedEntity : Alias;

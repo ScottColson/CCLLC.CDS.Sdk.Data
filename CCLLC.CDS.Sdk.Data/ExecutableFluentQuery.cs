@@ -12,7 +12,7 @@ namespace CCLLC.CDS.Sdk
         public ExecutableFluentQuery(IOrganizationService organizationService)
             : base()
         {
-            this.OrganizationService = organizationService ?? throw new ArgumentNullException("organizationService");
+            this.OrganizationService = organizationService ?? throw new ArgumentNullException(nameof(organizationService));
         }
 
         /// <summary>

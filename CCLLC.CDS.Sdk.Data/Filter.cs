@@ -20,30 +20,28 @@ namespace CCLLC.CDS.Sdk
         }
 
         public IFilter<P> HasStatus(params int[] status)
-        {
-            if(status != null)
+        {            
+            if(status.Length == 1)
             {
-                if(status.Length == 1)
-                {
-                    Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, status[0]));
-                }
-                else
-                {
-                    //Multiple status values imply an OR clause for each value.
-                    var statusFilter = new Filter<P>(this, LogicalOperator.Or);
-                    foreach(var s in status)
-                    {
-                        statusFilter.Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, s));
-                    }
-                    this.Filters.Add(statusFilter.ToFilterExpression());
-                }
+                Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, status[0]));
             }
+            else
+            {
+                //Multiple status values imply an OR clause for each value.
+                var statusFilter = new Filter<P>(this, LogicalOperator.Or);
+                foreach(var s in status)
+                {
+                    statusFilter.Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, s));
+                }
+                this.Filters.Add(statusFilter.ToFilterExpression());
+            }
+            
             return this;
         }
 
         public IFilter<P> HasStatus<T>(params T[] status) where T : Enum
         {
-            if(status != null && status.Length > 0)
+            if(status.Length > 0)
             {
                 var statusAsInt =  Array.ConvertAll(status, value => (int)(object)value);
                 return HasStatus(statusAsInt);

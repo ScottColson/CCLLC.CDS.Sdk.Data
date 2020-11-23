@@ -15,7 +15,7 @@ namespace CCLLC.CDS.Sdk
                 
         protected string RecordType { get; }
 
-        public QueryEntity() : base()
+        protected QueryEntity() : base()
         {
             RecordType = new E().LogicalName;
             Columnsets = new List<IList<string>>();
@@ -28,7 +28,7 @@ namespace CCLLC.CDS.Sdk
         {
             var relatedRecordType = new RE().LogicalName;
 
-            var joinEntity = new JoinedEntity<P,E, RE>(JoinOperator.LeftOuter, RecordType, fromAttributeName, relatedRecordType, toAttributeName, this);
+            var joinEntity = new JoinedEntity<P,E, RE>(JoinOperator.LeftOuter, RecordType, fromAttributeName, relatedRecordType, toAttributeName);
             expression(joinEntity);
             LinkEntities.Add(joinEntity.ToLinkEntity());
             return (P)Parent;
@@ -40,43 +40,34 @@ namespace CCLLC.CDS.Sdk
         {
             var relatedRecordType = new RE().LogicalName;
 
-            var joinEntity = new JoinedEntity<P, E ,RE>(JoinOperator.Inner, RecordType, fromAttributeName, relatedRecordType, toAttributeName, this);
+            var joinEntity = new JoinedEntity<P, E ,RE>(JoinOperator.Inner, RecordType, fromAttributeName, relatedRecordType, toAttributeName);
             expression(joinEntity);
             LinkEntities.Add(joinEntity.ToLinkEntity());
             return (P)Parent;
         }        
 
         public P Select(params string[] columns)
-        {
-            if(columns != null)
-            {
-                Columnsets.Add(new List<string>(columns));
-            }
+        {            
+            Columnsets.Add(new List<string>(columns));            
             return (P)Parent;          
         }
 
         public P Select(Expression<Func<E, object>> anonymousTypeInitializer)
         {
             var columns = anonymousTypeInitializer.GetAttributeNamesArray<E>();
-                      
-            Columnsets.Add(columns);
-            return (P)Parent;
+            return Select(columns);
         }
 
         public P SelectAll()
         {
-            Columnsets.Add(new List<string>(new string[] { "*" }));
-            return (P)Parent;
+            return Select(new string[] { "*" });            
         }
 
         public P OrderByAsc(params string[] columns)
         {
-            if (columns != null)
+            foreach (var c in columns)
             {
-                foreach (var c in columns)
-                {
-                    OrderExpressions.Add(new OrderExpression(c, OrderType.Ascending));
-                }
+                OrderExpressions.Add(new OrderExpression(c, OrderType.Ascending));
             }
 
             return (P)Parent;
@@ -84,12 +75,9 @@ namespace CCLLC.CDS.Sdk
 
         public P OrderByDesc(params string[] columns)
         {
-            if (columns != null)
+            foreach (var c in columns)
             {
-                foreach (var c in columns)
-                {
-                    OrderExpressions.Add(new OrderExpression(c, OrderType.Descending));
-                }
+                OrderExpressions.Add(new OrderExpression(c, OrderType.Descending));
             }
 
             return (P)Parent;
@@ -130,9 +118,9 @@ namespace CCLLC.CDS.Sdk
             return new ColumnSet(uniqueColumns.ToArray());
         }
            
-        private bool isSelectAllColumnSet(IList<string> columns)
+        private static bool isSelectAllColumnSet(IList<string> columns)
         {
-            return (columns.Where(v => v.Equals("*")).FirstOrDefault() != null);
+            return (columns.Where(v => v.Equals("*", StringComparison.Ordinal)).FirstOrDefault() != null);
         }
 
        

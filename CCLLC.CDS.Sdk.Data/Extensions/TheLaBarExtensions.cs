@@ -46,10 +46,11 @@ namespace CCLLC.CDS.Sdk
             _ = property ?? throw new ArgumentNullException(nameof(property));
 
             var name = property.Name;
-            var attribute = typeof(T).GetProperty(name)?.GetCustomAttributes<AttributeLogicalNameAttribute>().FirstOrDefault();
+            var attribute = typeof(T).GetProperty(name)?.GetCustomAttributes<AttributeLogicalNameAttribute>().FirstOrDefault()
+                ?? throw new InvalidCastException($"Unable to retrieve AttributeLogicalName for property {name}");
             
-            return attribute?.LogicalName 
-                ?? throw new Exception(string.Format("Unable to retrieve AttributeLogicalName for property {0}", name));
+            return attribute.LogicalName;
+                
         }
 
         /// <summary>

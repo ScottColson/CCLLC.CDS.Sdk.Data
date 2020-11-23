@@ -14,7 +14,7 @@ namespace CCLLC.CDS.Sdk
     /// Extensions for the Microsoft.Xrm.Sdk Entity class to provide a set of common functions for manipulating Entity records.
     /// </summary>
     public static partial class Extensions
-    {        
+    {
         /// <summary>
         /// Checks the target for existence of any attribute contained in the provided array of attribute names and returns
         /// true if at least one of the provided attributes exists.
@@ -26,14 +26,11 @@ namespace CCLLC.CDS.Sdk
         {
             _ = target ?? throw new ArgumentNullException(nameof(target));
 
-            if (attributeNames != null)
+            foreach (string a in attributeNames)
             {
-                foreach (string a in attributeNames)
+                if (target.Contains(a))
                 {
-                    if (target.Contains(a))
-                    {
-                        return true;
-                    }
+                    return true;
                 }
             }
 
@@ -44,16 +41,16 @@ namespace CCLLC.CDS.Sdk
         /// Checks an early bound entity for the existence of one or more fields using projection to
         /// define the field list.
         /// </summary>
-        /// <typeparam name="E"></typeparam>
+        /// <typeparam name="TEntity"></typeparam>
         /// <param name="target"></param>
         /// <param name="anonymousTypeInitializer"></param>
         /// <returns></returns>
-        public static bool ContainsAny<E>(this E target, Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
+        public static bool ContainsAny<TEntity>(this TEntity target, Expression<Func<TEntity, object>> anonymousTypeInitializer) where TEntity : Entity
         {
             _ = target ?? throw new ArgumentNullException(nameof(target));
             _ = anonymousTypeInitializer ?? throw new ArgumentNullException(nameof(anonymousTypeInitializer));
 
-            var columns = anonymousTypeInitializer.GetAttributeNamesArray<E>();
+            var columns = anonymousTypeInitializer.GetAttributeNamesArray<TEntity>();
             return target.ContainsAny(columns);
         }
 
@@ -68,6 +65,9 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public static T GetValue<T>(this Entity target, string key, T defaultValue = default)
         {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+            _ = key ?? throw new ArgumentNullException(nameof(key));
+
             if (!target.Contains(key) || target[key] is null)
             {
                 return defaultValue;
@@ -83,7 +83,7 @@ namespace CCLLC.CDS.Sdk
             _ = alias ?? throw new ArgumentNullException(nameof(alias));
             _ = fieldName ?? throw new ArgumentNullException(nameof(fieldName));
 
-            string key = string.Format("{0}.{1}", alias, fieldName);
+            var key = $"{alias}.{fieldName}";
             return target.GetAliasedValue<T>(key, defaultValue);
             
         }
@@ -124,18 +124,16 @@ namespace CCLLC.CDS.Sdk
             }
 
             alias += ".";
-
-            foreach(var key in target.Attributes.Keys.Where(k => k.StartsWith(alias)))
+            foreach (var (value, aliasedKey) in from key in target.Attributes.Keys.Where(k => k.StartsWith(alias))
+                                                let value = target.GetAttributeValue<AliasedValue>(key).Value
+                                                let aliasedKey = key.Substring(alias.Length)
+                                                select (value, aliasedKey))
             {
-                var value = target.GetAttributeValue<AliasedValue>(key).Value;
-                var aliasedKey = key.Substring(alias.Length);
-                
                 record.Attributes.Add(aliasedKey, value);
-                if(aliasedKey == idattribute)
+                if (aliasedKey == idattribute)
                 {
-                    record.Id = (Guid)value;                    
+                    record.Id = (Guid)value;
                 }
-
             }
 
             if (record.Attributes.Count == 0)
@@ -193,6 +191,7 @@ namespace CCLLC.CDS.Sdk
 
         public static void SetState(this IOrganizationService service, Entity target, OptionSetValue state, OptionSetValue status)
         {
+            _ = service ?? throw new ArgumentNullException(nameof(service));
             _ = target ?? throw new ArgumentNullException(nameof(target));
             _ = state ?? throw new ArgumentNullException(nameof(state));
             _ = status ?? throw new ArgumentNullException(nameof(status));
@@ -227,6 +226,7 @@ namespace CCLLC.CDS.Sdk
 
         public static OptionMetadata GetOptionMetadata(this OptionSetValue value, IOrganizationService service, Entity entity, string attributeLogicalName)
         {
+            _ = value ?? throw new ArgumentNullException(nameof(value));
             _ = service ?? throw new ArgumentNullException(nameof(service));
             _ = entity ?? throw new ArgumentNullException(nameof(entity));
             _ = attributeLogicalName ?? throw new ArgumentNullException(nameof(attributeLogicalName));
@@ -234,7 +234,7 @@ namespace CCLLC.CDS.Sdk
             var attributeMeta = service.GetAttributeMetadata(entity.LogicalName, attributeLogicalName);
             return attributeMeta is EnumAttributeMetadata metadata
                 ? metadata.GetOptionMetadata(value.Value)
-                : throw new Exception("The attribute is not an Enum type attribute");
+                : throw new InvalidCastException("The attribute is not an Enum type attribute");
         }
 
         public static OptionMetadata GetOptionMetadata(this EnumAttributeMetadata enumMeta, int value)
@@ -269,14 +269,14 @@ namespace CCLLC.CDS.Sdk
             return string.Empty;
         }
 
-        public static List<T> ToList<T>(this EntityCollection entities) where T : Entity
+        public static IList<T> ToList<T>(this EntityCollection entities) where T : Entity
         {
             _ = entities ?? throw new ArgumentNullException(nameof(entities));
 
             return entities.Entities.ToList<T>();
         }
 
-        public static List<T> ToList<T>(this IEnumerable<Entity> entities) where T : Entity
+        public static IList<T> ToList<T>(this IEnumerable<Entity> entities) where T : Entity
         {
             _ = entities ?? throw new ArgumentNullException(nameof(entities));
 
