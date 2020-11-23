@@ -42,7 +42,7 @@ namespace CCLLC.CDS.Sdk
 
         private FluentQuerySettings<P,E> Settings { get; }
 
-        public FluentQuery() : base()
+        protected FluentQuery() : base()
         {
             Settings = new FluentQuerySettings<P, E>(this);
         }

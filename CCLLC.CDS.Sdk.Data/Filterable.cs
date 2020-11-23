@@ -11,7 +11,7 @@ namespace CCLLC.CDS.Sdk
         public IList<ConditionExpression> Conditions { get; }
         public virtual IFilterable<P> Parent { get; protected set; }
 
-        public Filterable()
+        protected Filterable()
         {
             Filters = new List<FilterExpression>();
             Conditions = new List<ConditionExpression>();           
