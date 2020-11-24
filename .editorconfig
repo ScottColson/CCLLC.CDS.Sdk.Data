@@ -121,7 +121,8 @@ csharp_preserve_single_line_blocks = true
 
 # CS1591: Missing XML comment for publicly visible type or member
 dotnet_diagnostic.CS1591.severity = none
-
+dotnet_diagnostic.CA1800.severity = none
+dotnet_diagnostic.CA1062.severity = none
 
 # Default severity for analyzer diagnostics with category 'Globalization'
 dotnet_analyzer_diagnostic.category-Globalization.severity = none
