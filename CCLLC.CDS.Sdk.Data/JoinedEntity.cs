@@ -35,7 +35,11 @@ namespace CCLLC.CDS.Sdk
                 LinkCriteria = GetFilterExpression()
             };
 
-            linkEntity.LinkEntities.AddRange(LinkEntities);
+            foreach(var je in JoinedEntities)
+            {
+                linkEntity.LinkEntities.Add(je.ToLinkEntity());
+            }   
+            
             linkEntity.Orders.AddRange(OrderExpressions);
 
             return linkEntity;

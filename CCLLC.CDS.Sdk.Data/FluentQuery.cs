@@ -62,7 +62,11 @@ namespace CCLLC.CDS.Sdk
                 Criteria = GetFilterExpression()
             };
 
-            qryExpression.LinkEntities.AddRange(LinkEntities);
+            foreach(var je in JoinedEntities)
+            {
+                qryExpression.LinkEntities.Add(je.ToLinkEntity());
+            }
+       
             qryExpression.Orders.AddRange(OrderExpressions);
 
             return qryExpression;

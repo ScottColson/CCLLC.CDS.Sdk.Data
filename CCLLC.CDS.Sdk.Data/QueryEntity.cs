@@ -10,7 +10,7 @@ namespace CCLLC.CDS.Sdk
     public abstract class QueryEntity<P,E> : Filterable<P>, IQueryEntity<P,E> where P : IQueryEntity<P,E> where E : Entity, new()
     {   
         protected IList<IList<string>> Columnsets { get; }
-        protected IList<LinkEntity> LinkEntities { get; }
+        protected IList<IJoinedEntity> JoinedEntities { get; }
         protected IList<OrderExpression> OrderExpressions { get; }
                 
         protected string RecordType { get; }
@@ -20,7 +20,7 @@ namespace CCLLC.CDS.Sdk
             var record = new E();
             RecordType = record.LogicalName;
             Columnsets = new List<IList<string>>();
-            LinkEntities = new List<LinkEntity>();
+            JoinedEntities = new List<IJoinedEntity>();
             OrderExpressions = new List<OrderExpression>();
             this.Parent = this;
         }
@@ -33,7 +33,7 @@ namespace CCLLC.CDS.Sdk
 
             var joinEntity = new JoinedEntity<P,E, RE>(JoinOperator.LeftOuter, RecordType, fromAttributeName, relatedRecordType, toAttributeName);
             expression(joinEntity);
-            LinkEntities.Add(joinEntity.ToLinkEntity());
+            JoinedEntities.Add(joinEntity);
             return (P)Parent;
         }
 
@@ -47,7 +47,7 @@ namespace CCLLC.CDS.Sdk
 
             var joinEntity = new JoinedEntity<P, E ,RE>(JoinOperator.Inner, RecordType, fromAttributeName, relatedRecordType, toAttributeName);
             expression(joinEntity);
-            LinkEntities.Add(joinEntity.ToLinkEntity());
+            JoinedEntities.Add(joinEntity);
             return (P)Parent;
         }        
 
