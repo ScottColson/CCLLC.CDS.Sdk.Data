@@ -7,7 +7,10 @@ namespace CCLLC.CDS.Sdk
     {
         public IFilter<P> Parent { get; }
         protected string AttributeName { get; }
-        
+        protected ConditionOperator Operator { get; private set; }
+        protected object Value { get; private set; }
+
+
         public Condition(IFilter<P> parent, string attributeName)
         {
             this.AttributeName = attributeName;
@@ -16,44 +19,42 @@ namespace CCLLC.CDS.Sdk
 
         public IFilter<P> Is<T>(ConditionOperator conditionOperator, params T[] values)
         {
-            addConditions<T>(conditionOperator, values);
+            AddToFilter<T>(conditionOperator, values);                     
             return (IFilter<P>)Parent;
         }
 
-        public IFilter<P> IsEqualTo<T>(T[] values)
+        public IFilter<P> IsEqualTo<T>(params T[] values)
         {
-            addConditions<T>(ConditionOperator.Equal, values);
+            AddToFilter(ConditionOperator.Equal, values);
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsGreaterThan<T>(T value)
         {
-            addConditionToFilter(ConditionOperator.GreaterThan, value, (IFilter<P>)Parent);
+            AddToFilter<T>(ConditionOperator.GreaterThan, value);           
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsGreaterThanOrEqualTo<T>(T value)
         {
-            addConditionToFilter(ConditionOperator.GreaterEqual, value, Parent);
+            AddToFilter<T>(ConditionOperator.GreaterEqual, value);            
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsLessThan<T>(T value)
         {
-            addConditionToFilter(ConditionOperator.LessThan, value, Parent);
+            AddToFilter<T>(ConditionOperator.LessThan, value);            
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsLessThanOrEqualTo<T>(T value)
         {
-            addConditionToFilter(ConditionOperator.LessEqual, value, Parent);
+            AddToFilter<T>(ConditionOperator.LessEqual, value);            
             return (IFilter<P>)Parent;
         }
 
-        public IFilter<P> IsLike(string[] values)
-        {
-            if (values is null) return (IFilter<P>)Parent;
-
+        public IFilter<P> IsLike(params string[] values)
+        {           
             //handle wild card conversion
             for(int i=0; i<values.Length; i++)
             {
@@ -63,52 +64,65 @@ namespace CCLLC.CDS.Sdk
                 }
             }
 
-            addConditions<string>(ConditionOperator.Like, values);
+            AddToFilter<string>(ConditionOperator.Like, values);            
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsNotNull()
         {
-            addConditionToFilter(ConditionOperator.NotNull, null, Parent);
+            AddToFilter(ConditionOperator.NotNull);            
             return (IFilter<P>)Parent;
         }
 
         public IFilter<P> IsNull()
         {
-            addConditionToFilter(ConditionOperator.Null, null, Parent);
+            AddToFilter(ConditionOperator.Null);
             return (IFilter<P>)Parent;
         }
 
-
-        private void addConditions<T>(ConditionOperator conditionOperator, T[] values)
+        public ConditionExpression ToConditionExpression()
         {
-            if (values is null) return;
-
-            if (values.Length == 1)
+            if(Value is null)
             {
-                addConditionToFilter(conditionOperator, values[0], Parent);
+                return new ConditionExpression(AttributeName, Operator);
+            }
+
+            return new ConditionExpression(AttributeName, Operator, Value);
+        }
+
+        private void AddToFilter(ConditionOperator conditionOperator)
+        {
+            this.Operator = conditionOperator;
+            this.Value = null;
+            Parent.Conditions.Add(this);
+        }
+       
+        private void AddToFilter<T>(ConditionOperator conditionOperator, T value)
+        {
+            this.Operator = conditionOperator;
+            this.Value = value;
+            Parent.Conditions.Add(this);
+        }
+
+        private void AddToFilter<T>(ConditionOperator conditionOperator, T[] values)
+        {
+            if (values.Length <= 1 || conditionOperator == ConditionOperator.In)
+            {
+                this.Operator = conditionOperator;
+                this.Value = values.Length > 0 ? values : null;
+                Parent.Conditions.Add(this);
                 return;
             }
 
-            var impliedOrFilter = new Filter<P>((IFilter<P>)Parent, LogicalOperator.Or);
+            //All other situation where more than one value are specified imply child Or filter
+            var filterExpression = new Filter<P>(Parent, LogicalOperator.Or);
             foreach(var v in values)
             {
-                addConditionToFilter(conditionOperator, v, impliedOrFilter);
+                var condition = new Condition<P>(filterExpression, AttributeName) ;
+                condition.Is<object>(conditionOperator,v);                
             }
 
-            (Parent as IFilter).Filters.Add(impliedOrFilter.ToFilterExpression());
-        }
-
-        private void addConditionToFilter(ConditionOperator conditionOperator, object value, IFilterable filter)
-        {
-            if (value is null)
-            {
-                filter.Conditions.Add(new ConditionExpression(AttributeName, conditionOperator));
-            }
-            else
-            {
-                filter.Conditions.Add(new ConditionExpression(AttributeName, conditionOperator, value));
-            }
+            Parent.Filters.Add(filterExpression);            
         }
     }
 }

@@ -7,14 +7,14 @@ namespace CCLLC.CDS.Sdk
 {
     public abstract class Filterable<P> : IFilterable<P> where P : IFilterable
     {
-        public IList<FilterExpression> Filters { get; }
-        public IList<ConditionExpression> Conditions { get; }
+        public IList<IFilter> Filters { get; }
+        public IList<ICondition> Conditions { get; }
         public virtual IFilterable<P> Parent { get; protected set; }
 
         protected Filterable()
         {
-            Filters = new List<FilterExpression>();
-            Conditions = new List<ConditionExpression>();           
+            Filters = new List<IFilter>();
+            Conditions = new List<ICondition>();           
         }
        
 
@@ -24,7 +24,7 @@ namespace CCLLC.CDS.Sdk
 
             var filter = new Filter<P>(Parent, LogicalOperator.And);
             expression(filter);
-            this.Filters.Add(filter.ToFilterExpression());
+            this.Filters.Add(filter);
             return (P)Parent;
         }
 
@@ -34,7 +34,7 @@ namespace CCLLC.CDS.Sdk
 
             var filter = new Filter<P>(Parent, LogicalOperator.Or);
             expression(filter);
-            this.Filters.Add(filter.ToFilterExpression());
+            this.Filters.Add(filter);
             return (P)Parent;
         }
 

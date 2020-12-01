@@ -15,27 +15,15 @@ namespace CCLLC.CDS.Sdk
 
         public IFilter<P> IsActive(bool value = true)
         {
-            Conditions.Add(new ConditionExpression("statecode", ConditionOperator.Equal, (value == true) ? 0:1));
+            var condition = new Condition<P>(this, "statecode");
+            condition.IsEqualTo<int>((value == true) ? 0 : 1);            
             return (IFilter<P>)this;
         }
 
         public IFilter<P> HasStatus(params int[] status)
-        {            
-            if(status.Length == 1)
-            {
-                Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, status[0]));
-            }
-            else
-            {
-                //Multiple status values imply an OR clause for each value.
-                var statusFilter = new Filter<P>(this, LogicalOperator.Or);
-                foreach(var s in status)
-                {
-                    statusFilter.Conditions.Add(new ConditionExpression("statuscode", ConditionOperator.Equal, s));
-                }
-                this.Filters.Add(statusFilter.ToFilterExpression());
-            }
-            
+        {
+            var condition = new Condition<P>(this, "statuscode");
+            condition.IsEqualTo<int>(status);            
             return this;
         }
 
@@ -49,13 +37,17 @@ namespace CCLLC.CDS.Sdk
             return this;            
         }
 
-       
-
         public FilterExpression ToFilterExpression()
         {
             var filterExpression = new FilterExpression(Operator);
-            filterExpression.Conditions.AddRange(Conditions);
-            filterExpression.Filters.AddRange(Filters);
+            foreach(var c in Conditions)
+            {
+                filterExpression.AddCondition(c.ToConditionExpression());
+            }            
+            foreach(var f in Filters)
+            {
+                filterExpression.AddFilter(f.ToFilterExpression());
+            }           
             
             return filterExpression;            
         }
@@ -63,7 +55,6 @@ namespace CCLLC.CDS.Sdk
         public ICondition<P> Attribute(string name)
         {
             return new Condition<P>(this, name);
-            throw new NotImplementedException();
         }
     }
 

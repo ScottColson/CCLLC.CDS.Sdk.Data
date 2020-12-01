@@ -92,11 +92,15 @@ namespace CCLLC.CDS.Sdk
         {
             if (Filters.Count == 0) return new FilterExpression();
 
-            if (Filters.Count == 1) return Filters[0];
+            if (Filters.Count == 1) return Filters[0].ToFilterExpression();
 
             // Wrap multiple filters in an AND filter.
             var filterExpression = new FilterExpression(LogicalOperator.And);
-            filterExpression.Filters.AddRange(Filters);
+            foreach(var f in Filters)
+            {
+                filterExpression.Filters.Add(f.ToFilterExpression());
+            }
+            
 
             return filterExpression;
         }

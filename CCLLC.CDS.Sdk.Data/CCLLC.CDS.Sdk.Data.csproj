@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <AssemblyName>CcllcCdsSdkData</AssemblyName>
+    <AssemblyName>CCLLC.CDS.Sdk.Data</AssemblyName>
     <RootNamespace>CCLLC.CDS.Sdk.Data</RootNamespace>
     <ProjectGuid>{642D436F-0839-444F-8FD4-955205F98564}</ProjectGuid>
   </PropertyGroup>

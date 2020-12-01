@@ -5,7 +5,7 @@ namespace CCLLC.CDS.Sdk
 {   
     public interface IFilter : IFilterable
     {
-        
+        FilterExpression ToFilterExpression();
     }
 
     public interface IFilter<P> : IFilterable<P>, IFilter where P : IFilterable

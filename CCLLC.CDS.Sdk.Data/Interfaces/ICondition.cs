@@ -1,8 +1,14 @@
 ﻿using System.Collections.Generic;
+using Microsoft.Xrm.Sdk.Query;
 
 namespace CCLLC.CDS.Sdk
 {   
-    public interface ICondition<P> where P : IFilterable
+    public interface ICondition
+    {
+        ConditionExpression ToConditionExpression();
+    }
+
+    public interface ICondition<P> : ICondition where P : IFilterable
     {
         IFilter<P> Parent { get; }
         IFilter<P> Is<T>(Microsoft.Xrm.Sdk.Query.ConditionOperator conditionOperator, params T[] values);

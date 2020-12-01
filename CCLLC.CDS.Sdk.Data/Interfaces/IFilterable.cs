@@ -6,8 +6,8 @@ namespace CCLLC.CDS.Sdk
 {
     public interface IFilterable 
     {
-        IList<FilterExpression> Filters { get; }
-        IList<ConditionExpression> Conditions { get; }
+        IList<IFilter> Filters { get; }
+        IList<ICondition> Conditions { get; }
         
     }
     
