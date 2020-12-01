@@ -11,7 +11,7 @@ namespace CCLLC.CDS.Sdk
 
         public QueryExpression Build()
         {
-            return this.getQueryExpression();
+            return this.GetQueryExpression();
         }
     }
 }

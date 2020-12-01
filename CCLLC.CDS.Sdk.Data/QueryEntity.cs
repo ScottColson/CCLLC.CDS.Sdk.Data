@@ -112,7 +112,7 @@ namespace CCLLC.CDS.Sdk
 
             foreach (var cs in this.Columnsets)
             {
-                if (isSelectAllColumnSet(cs))
+                if (IsSelectAllColumnSet(cs))
                     return new ColumnSet(true);
 
                 foreach (var c in cs)
@@ -127,7 +127,7 @@ namespace CCLLC.CDS.Sdk
             return new ColumnSet(uniqueColumns.ToArray());
         }
            
-        private static bool isSelectAllColumnSet(IList<string> columns)
+        private static bool IsSelectAllColumnSet(IList<string> columns)
         {
             return (columns.Where(v => v.Equals("*", StringComparison.Ordinal)).FirstOrDefault() != null);
         }

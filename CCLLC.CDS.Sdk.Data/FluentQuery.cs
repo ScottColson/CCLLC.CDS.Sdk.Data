@@ -49,7 +49,7 @@ namespace CCLLC.CDS.Sdk
 
         public IFluentQuerySettings<P, E> With => Settings;
 
-        protected QueryExpression getQueryExpression()
+        protected QueryExpression GetQueryExpression()
         {
             E baseRecord = new E();
 

@@ -21,7 +21,7 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public IList<E> Retrieve()
         {
-            var queryExpression = this.getQueryExpression();
+            var queryExpression = this.GetQueryExpression();
 
             return OrganizationService.RetrieveMultiple(queryExpression).Entities
                 .Select(e => e.ToEntity<E>()).ToList();
@@ -33,7 +33,7 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public IList<E> RetrieveAll()
         {
-            var qryExpression = this.getQueryExpression();
+            var qryExpression = this.GetQueryExpression();
 
             var allRecords = new List<E>();
             bool moreRecords = true;
@@ -62,7 +62,7 @@ namespace CCLLC.CDS.Sdk
         {
             this.With.RecordLimit(1); //set the retrieve record limit to 1
 
-            var queryExpression = this.getQueryExpression();
+            var queryExpression = this.GetQueryExpression();
 
             return OrganizationService.RetrieveMultiple(queryExpression).Entities
                 .Select(e => e.ToEntity<E>()).ToList().FirstOrDefault();            
