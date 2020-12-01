@@ -29,7 +29,6 @@ steps:
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
-    vsVersion: '15.0'
     msbuildArgs: '/p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactstagingdirectory)\\"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
