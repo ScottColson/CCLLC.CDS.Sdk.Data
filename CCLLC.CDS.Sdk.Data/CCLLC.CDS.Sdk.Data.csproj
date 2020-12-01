@@ -57,7 +57,9 @@
     <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.8.0" />
     <PackageReference Include="Microsoft.CrmSdk.CoreAssemblies" Version="9.0.2.20" />
   </ItemGroup>
-
+  <PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net462|AnyCPU'">
+    <RunAnalyzersDuringBuild>false</RunAnalyzersDuringBuild> 
+  </PropertyGroup>
 </Project>
 
 
