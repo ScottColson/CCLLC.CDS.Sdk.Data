@@ -5,7 +5,7 @@ namespace CCLLC.CDS.Sdk
 {  
     public interface IJoinedEntity
     {
-        LinkEntity ToLinkEntity();
+        LinkEntity ToLinkEntity(string searchValue);
     }
 
     public interface IJoinedEntity<P,E,RE> :IJoinedEntity, IQueryEntity, IQueryEntity<IJoinedEntity<P,E,RE>,RE> where P : IQueryEntity<P,E> where E : Entity where RE : Entity

@@ -88,19 +88,29 @@ namespace CCLLC.CDS.Sdk
             return (P)Parent;
         }
 
-        protected FilterExpression GetFilterExpression()
+        protected FilterExpression GetFilterExpression(string searchValue)
         {
-            if (Filters.Count == 0) return new FilterExpression();
-
-            if (Filters.Count == 1) return Filters[0].ToFilterExpression();
-
-            // Wrap multiple filters in an AND filter.
             var filterExpression = new FilterExpression(LogicalOperator.And);
-            foreach(var f in Filters)
+
+            if (Filters.Count == 1)
             {
-                filterExpression.Filters.Add(f.ToFilterExpression());
+                filterExpression = Filters[0].ToFilterExpression(searchValue);
             }
-            
+            else if(Filters.Count > 1)
+            {
+                // Wrap multiple filters in an AND filter.
+                filterExpression = new FilterExpression(LogicalOperator.And);
+                foreach (var f in Filters)
+                {
+                    filterExpression.Filters.Add(f.ToFilterExpression(searchValue));
+                }
+            }            
+
+            var searchFilter = GenerateSearchFilter(searchValue);
+            if(searchFilter != null)
+            {
+                filterExpression.AddFilter(searchFilter);
+            }
 
             return filterExpression;
         }

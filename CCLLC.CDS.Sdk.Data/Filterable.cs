@@ -9,10 +9,12 @@ namespace CCLLC.CDS.Sdk
     {
         public IList<IFilter> Filters { get; }
         public IList<ICondition> Conditions { get; }
+        protected IList<string> SearchFields { get; }
         public virtual IFilterable<P> Parent { get; protected set; }
 
         protected Filterable()
         {
+            SearchFields = new List<string>();
             Filters = new List<IFilter>();
             Conditions = new List<ICondition>();           
         }
@@ -38,6 +40,18 @@ namespace CCLLC.CDS.Sdk
             return (P)Parent;
         }
 
-       
+        protected virtual FilterExpression GenerateSearchFilter(string searchValue)
+        {
+            if (SearchFields.Count <= 0 || searchValue is null)
+                return null;
+
+            var searchFilter = new FilterExpression(LogicalOperator.Or);
+            foreach (var sf in SearchFields)
+            {
+                searchFilter.AddCondition(new ConditionExpression(sf, ConditionOperator.Like, searchValue));
+            }
+
+            return searchFilter;
+        }
     }
 }

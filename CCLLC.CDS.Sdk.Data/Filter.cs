@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 namespace CCLLC.CDS.Sdk
@@ -8,7 +10,7 @@ namespace CCLLC.CDS.Sdk
         public LogicalOperator Operator { get; }      
      
         public Filter(IFilterable<P> parent, LogicalOperator logicalOperator) : base()
-        {
+        {            
             this.Parent = parent;
             this.Operator = logicalOperator;           
         }
@@ -37,7 +39,7 @@ namespace CCLLC.CDS.Sdk
             return this;            
         }
 
-        public FilterExpression ToFilterExpression()
+        public FilterExpression ToFilterExpression(string searchValue)
         {
             var filterExpression = new FilterExpression(Operator);
             foreach(var c in Conditions)
@@ -46,15 +48,39 @@ namespace CCLLC.CDS.Sdk
             }            
             foreach(var f in Filters)
             {
-                filterExpression.AddFilter(f.ToFilterExpression());
-            }           
-            
+                filterExpression.AddFilter(f.ToFilterExpression(searchValue));
+            }
+
+            var searchFilter = GenerateSearchFilter(searchValue);
+            if(searchFilter != null)
+            {
+                filterExpression.AddFilter(searchFilter);
+            }
+
             return filterExpression;            
         }
 
         public ICondition<P> Attribute(string name)
         {
             return new Condition<P>(this, name);
+        }
+
+        public IFilter<P> WithSearchFields(params string[] fields)
+        {
+            foreach(var f in fields)
+            {
+                if (!SearchFields.Contains(f))
+                {
+                    SearchFields.Add(f);
+                }
+            }
+            return this;
+        }
+
+        public IFilter<P> WithSearchFields<E>(System.Linq.Expressions.Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
+        {
+            var fields = anonymousTypeInitializer.GetAttributeNamesArray<E>();
+            return this.WithSearchFields(fields);
         }
     }
 

@@ -7,8 +7,7 @@ namespace CCLLC.CDS.Sdk
     public interface IFilterable 
     {
         IList<IFilter> Filters { get; }
-        IList<ICondition> Conditions { get; }
-        
+        IList<ICondition> Conditions { get; }        
     }
     
     public interface IFilterable<P> : IFilterable where P : IFilterable
@@ -22,5 +21,5 @@ namespace CCLLC.CDS.Sdk
         /// <param name="expression"></param>
         /// <returns></returns>
         P WhereAny(Action<IFilter<P>> expression);
-    }
+    }   
 }

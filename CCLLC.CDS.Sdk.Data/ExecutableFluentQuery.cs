@@ -7,6 +7,8 @@ namespace CCLLC.CDS.Sdk
 {
     public class ExecutableFluentQuery<E> : FluentQuery<IExecutableFluentQuery<E>,E>, IExecutableFluentQuery<E> where E : Entity, new()
     {
+        private string SearchValue = null;
+
         protected IOrganizationService OrganizationService { get; }      
 
         public ExecutableFluentQuery(IOrganizationService organizationService)
@@ -21,7 +23,7 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public IList<E> Retrieve()
         {
-            var queryExpression = this.GetQueryExpression();
+            var queryExpression = this.GetQueryExpression(SearchValue);
 
             return OrganizationService.RetrieveMultiple(queryExpression).Entities
                 .Select(e => e.ToEntity<E>()).ToList();
@@ -33,7 +35,7 @@ namespace CCLLC.CDS.Sdk
         /// <returns></returns>
         public IList<E> RetrieveAll()
         {
-            var qryExpression = this.GetQueryExpression();
+            var qryExpression = this.GetQueryExpression(null);
 
             var allRecords = new List<E>();
             bool moreRecords = true;
@@ -62,10 +64,16 @@ namespace CCLLC.CDS.Sdk
         {
             this.With.RecordLimit(1); //set the retrieve record limit to 1
 
-            var queryExpression = this.GetQueryExpression();
+            var queryExpression = this.GetQueryExpression(null);
 
             return OrganizationService.RetrieveMultiple(queryExpression).Entities
                 .Select(e => e.ToEntity<E>()).ToList().FirstOrDefault();            
+        }
+
+        public IExecutableFluentQuery<E> WithSearchValue(string searchValue)
+        {
+            SearchValue = searchValue;
+            return this;
         }
     }
 }

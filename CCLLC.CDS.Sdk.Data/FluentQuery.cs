@@ -49,7 +49,7 @@ namespace CCLLC.CDS.Sdk
 
         public IFluentQuerySettings<P, E> With => Settings;
 
-        protected QueryExpression GetQueryExpression()
+        protected QueryExpression GetQueryExpression(string searchValue)
         {
             E baseRecord = new E();
 
@@ -59,12 +59,12 @@ namespace CCLLC.CDS.Sdk
                 TopCount = Settings.TopCount,
                 Distinct = Settings.Distinct,
                 ColumnSet = GetColumnSet(),
-                Criteria = GetFilterExpression()
+                Criteria = GetFilterExpression(searchValue)
             };
 
             foreach(var je in JoinedEntities)
             {
-                qryExpression.LinkEntities.Add(je.ToLinkEntity());
+                qryExpression.LinkEntities.Add(je.ToLinkEntity(searchValue));
             }
        
             qryExpression.Orders.AddRange(OrderExpressions);
@@ -84,6 +84,6 @@ namespace CCLLC.CDS.Sdk
 
             return base.GetColumnSet();
         }
-
+               
     }
 }

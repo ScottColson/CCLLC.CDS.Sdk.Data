@@ -5,6 +5,8 @@ namespace CCLLC.CDS.Sdk
 {
     public interface IExecutableFluentQuery<E> : IFluentQuery<IExecutableFluentQuery<E>, E> where E : Entity
     {
+        IExecutableFluentQuery<E> WithSearchValue(string searchValue);
+
         /// <summary>
         /// Retrieve records using paging limits.
         /// </summary>

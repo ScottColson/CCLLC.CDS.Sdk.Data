@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Linq.Expressions;
+using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
 namespace CCLLC.CDS.Sdk
 {   
     public interface IFilter : IFilterable
     {
-        FilterExpression ToFilterExpression();
+        FilterExpression ToFilterExpression(string searchValue);
     }
 
     public interface IFilter<P> : IFilterable<P>, IFilter where P : IFilterable
@@ -19,5 +21,8 @@ namespace CCLLC.CDS.Sdk
 
         ICondition<P> Attribute(string name);
 
-    }
+        IFilter<P> WithSearchFields(params string[] fields);
+
+        IFilter<P> WithSearchFields<E>(Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity;
+    }   
 }

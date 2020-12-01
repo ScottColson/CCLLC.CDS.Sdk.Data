@@ -107,6 +107,7 @@
     <Compile Include="Builders\OrganizationServiceBuilder.cs" />
     <Compile Include="Builders\ServiceProviderBuilder.cs" />
     <Compile Include="DebugLogger.cs" />
+    <Compile Include="SearchFilterTests.cs" />
     <Compile Include="FilterTests.cs" />
     <Compile Include="JoinTests.cs" />
     <Compile Include="MsTestProvider.cs" />

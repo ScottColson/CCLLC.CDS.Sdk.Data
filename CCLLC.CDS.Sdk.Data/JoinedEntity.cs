@@ -1,8 +1,5 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
-using System;
-using System.Collections.Generic;
-using System.Linq.Expressions;
 
 namespace CCLLC.CDS.Sdk
 {
@@ -26,18 +23,18 @@ namespace CCLLC.CDS.Sdk
             this.RelatedAttribute = relatedAttributeName;
         }
 
-        public LinkEntity ToLinkEntity()
+        public LinkEntity ToLinkEntity(string searchValue)
         {
             var linkEntity = new LinkEntity(ParentEntity, RelatedEntity, ParentAttribute, RelatedAttribute, JoinOperator)
             {
                 EntityAlias = string.IsNullOrEmpty(JoinAlias) ? RelatedEntity : JoinAlias,
                 Columns = GetColumnSet(),
-                LinkCriteria = GetFilterExpression()
+                LinkCriteria = GetFilterExpression(searchValue)
             };
 
             foreach(var je in JoinedEntities)
             {
-                linkEntity.LinkEntities.Add(je.ToLinkEntity());
+                linkEntity.LinkEntities.Add(je.ToLinkEntity(searchValue));
             }   
             
             linkEntity.Orders.AddRange(OrderExpressions);
