@@ -1,7 +1,6 @@
 ﻿using Microsoft.Xrm.Sdk;
 using Microsoft.Xrm.Sdk.Query;
 
-
 namespace CCLLC.CDS.Sdk
 {
     public abstract class FluentQuery<P, E> : QueryEntity<P, E>, IFluentQuery<P, E> where P : IFluentQuery<P, E> where E : Entity, new()
@@ -39,17 +38,20 @@ namespace CCLLC.CDS.Sdk
                 return (P)Parent;
             }
         }
-
+        
         private FluentQuerySettings<P,E> Settings { get; }
+
+        protected string SearchValue { get; set; }
 
         protected FluentQuery() : base()
         {
+            SearchValue = null;
             Settings = new FluentQuerySettings<P, E>(this);
         }
 
         public IFluentQuerySettings<P, E> With => Settings;
 
-        protected QueryExpression GetQueryExpression(string searchValue)
+        protected QueryExpression GetQueryExpression()
         {
             E baseRecord = new E();
 
@@ -59,12 +61,12 @@ namespace CCLLC.CDS.Sdk
                 TopCount = Settings.TopCount,
                 Distinct = Settings.Distinct,
                 ColumnSet = GetColumnSet(),
-                Criteria = GetFilterExpression(searchValue)
+                Criteria = GetFilterExpression(SearchValue)
             };
 
             foreach(var je in JoinedEntities)
             {
-                qryExpression.LinkEntities.Add(je.ToLinkEntity(searchValue));
+                qryExpression.LinkEntities.Add(je.ToLinkEntity(SearchValue));
             }
        
             qryExpression.Orders.AddRange(OrderExpressions);
@@ -84,6 +86,6 @@ namespace CCLLC.CDS.Sdk
 
             return base.GetColumnSet();
         }
-               
+                
     }
 }

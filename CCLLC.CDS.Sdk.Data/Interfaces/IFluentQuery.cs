@@ -6,7 +6,7 @@ namespace CCLLC.CDS.Sdk
     public interface IFluentQuery { }
 
     public interface IFluentQuery<P,E> : IFluentQuery, IQueryEntity<P,E> where P : IFluentQuery<P,E> where E : Entity
-    {    
+    {       
         IFluentQuerySettings<P,E> With { get; }
     }
 
