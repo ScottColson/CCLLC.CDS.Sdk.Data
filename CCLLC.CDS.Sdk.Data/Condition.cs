@@ -106,10 +106,22 @@ namespace CCLLC.CDS.Sdk
 
         private void AddToFilter<T>(ConditionOperator conditionOperator, T[] values)
         {
-            if (values.Length <= 1 || conditionOperator == ConditionOperator.In)
+            if(conditionOperator == ConditionOperator.In)
             {
                 this.Operator = conditionOperator;
-                this.Value = values.Length > 0 ? values : null;
+                this.Value = values;
+                Parent.Conditions.Add(this);
+                return;
+            }
+
+            if (values.Length <= 1)
+            {
+                this.Operator = conditionOperator;
+                if(values.Length == 1)
+                {
+                    this.Value = values[0];
+                }
+                
                 Parent.Conditions.Add(this);
                 return;
             }
