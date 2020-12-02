@@ -126,8 +126,11 @@ namespace CCLLC.CDS.Sdk
             alias += ".";
             foreach (var key in target.Attributes.Keys.Where(k => k.StartsWith(alias)))
             {
-                var value = target.Attributes[key];
-                record.Attributes.Add(key, value);
+                var value = target.GetAttributeValue<AliasedValue>(key).Value;
+                var aliasedKey = key.Substring(alias.Length);
+
+                record.Attributes.Add(aliasedKey, value);
+   
                 if (key == idattribute)
                 {
                     record.Id = (Guid)value;
