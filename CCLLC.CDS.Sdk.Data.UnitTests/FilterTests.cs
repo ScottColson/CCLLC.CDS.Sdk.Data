@@ -51,14 +51,18 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
             protected override void Test(IOrganizationService service)
             {
                 var qryExpression = new QueryExpressionBuilder<Account>()
-                        .WhereAll(a => a
+                        .WhereAll(a => a     
+                             .QuickFind()
                              .IsActive()
-                             .Attribute("accountnumber").IsEqualTo("test"))
+                             .Attribute("accountnumber").IsEqualTo("test")
+                             .WhereAll(a1 => a1
+                                .Attribute("name").IsEqualTo("testname")))
                         .Build();
 
                 var criteria = qryExpression.Criteria;
 
                 Assert.AreEqual(LogicalOperator.And, criteria.FilterOperator);
+                Assert.IsTrue(criteria.IsQuickFindFilter);
                 Assert.AreEqual(2, criteria.Conditions.Count);
             }
         }

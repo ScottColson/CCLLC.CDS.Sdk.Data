@@ -15,6 +15,9 @@
     </dependencies>
   </metadata>
   <files>   
-    <file src="..\CCLLC.CDS.Sdk.Data\**\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
+    <file src="..\CCLLC.CDS.Sdk.Data\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
+    <file src="..\CCLLC.CDS.Sdk.Data\EarlyBound\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
+    <file src="..\CCLLC.CDS.Sdk.Data\Extensions\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
+    <file src="..\CCLLC.CDS.Sdk.Data\Interfaces\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
   </files>
 </package>
