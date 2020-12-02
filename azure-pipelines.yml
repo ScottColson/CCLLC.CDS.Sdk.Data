@@ -13,7 +13,7 @@ variables:
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
   Version.Revision: '$(Build.SourceBranchName)'
-  Version.Formatted: '1.2.0.1'
+  Version.Formatted: '$(Build.BuildNumber)'
 
 steps:
 - task: NuGetToolInstaller@1
