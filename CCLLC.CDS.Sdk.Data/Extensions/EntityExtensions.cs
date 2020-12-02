@@ -114,23 +114,21 @@ namespace CCLLC.CDS.Sdk
         public static T GetAliasedEntity<T>(this Entity target, string alias = null) where T : Entity, new()
         {
             _ = target ?? throw new ArgumentNullException(nameof(target));
-           
+
             T record = new T();
             var idattribute = record.LogicalName + "id";
 
-            if(string.IsNullOrEmpty(alias))
+            if (string.IsNullOrEmpty(alias))
             {
                 alias = record.LogicalName;
             }
 
             alias += ".";
-            foreach (var (value, aliasedKey) in from key in target.Attributes.Keys.Where(k => k.StartsWith(alias))
-                                                let value = target.GetAttributeValue<AliasedValue>(key).Value
-                                                let aliasedKey = key.Substring(alias.Length)
-                                                select (value, aliasedKey))
+            foreach (var key in target.Attributes.Keys.Where(k => k.StartsWith(alias)))
             {
-                record.Attributes.Add(aliasedKey, value);
-                if (aliasedKey == idattribute)
+                var value = target.Attributes[key];
+                record.Attributes.Add(key, value);
+                if (key == idattribute)
                 {
                     record.Id = (Guid)value;
                 }
