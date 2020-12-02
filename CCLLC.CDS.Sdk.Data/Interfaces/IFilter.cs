@@ -13,6 +13,9 @@ namespace CCLLC.CDS.Sdk
     public interface IFilter<P> : IFilterable<P>, IFilter where P : IFilterable
     {
         LogicalOperator Operator { get; }
+
+        IFilter<P> QuickFind(bool value = true);
+
         IFilter<P> IsActive(bool value = true);
 
         IFilter<P> HasStatus(params int[] status);

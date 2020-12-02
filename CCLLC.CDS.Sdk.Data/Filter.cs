@@ -7,6 +7,8 @@ namespace CCLLC.CDS.Sdk
 {
     public partial class Filter<P> : Filterable<P>, IFilter<P> where P : IFilterable
     {
+        private bool isQuickFind;
+
         public LogicalOperator Operator { get; }      
      
         public Filter(IFilterable<P> parent, LogicalOperator logicalOperator) : base()
@@ -20,6 +22,12 @@ namespace CCLLC.CDS.Sdk
             var condition = new Condition<P>(this, "statecode");
             condition.IsEqualTo<int>((value == true) ? 0 : 1);            
             return (IFilter<P>)this;
+        }
+
+        public IFilter<P> QuickFind(bool value = true)
+        {
+            isQuickFind = value;
+            return this;
         }
 
         public IFilter<P> HasStatus(params int[] status)
@@ -41,7 +49,12 @@ namespace CCLLC.CDS.Sdk
 
         public FilterExpression ToFilterExpression(string searchValue)
         {
-            var filterExpression = new FilterExpression(Operator);
+            var filterExpression = new FilterExpression
+            {
+                FilterOperator = Operator,
+                IsQuickFindFilter = isQuickFind
+            };
+            
             foreach(var c in Conditions)
             {
                 filterExpression.AddCondition(c.ToConditionExpression());
