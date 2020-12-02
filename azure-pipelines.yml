@@ -39,26 +39,20 @@ steps:
     configuration: '$(buildConfiguration)'
 
 - task: NuGetCommand@2
-  displayName: 'NuGet Pack Source Artifact Package'
-- task: VSBuild@1
-  inputs:
-    solution: '$(solution)'
-    vsVersion: '15.0'
-    platform: '$(buildPlatform)'
-    configuration: '$(buildConfiguration)'
-    createLogFile: true
-
-- task: NuGetCommand@2
+  displayName: 'Pack Source'
   inputs:
     command: 'pack'
     packagesToPack: '**/sourcecode.nuspec'
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'Version.Formatted'
 
 - task: NuGetCommand@2
+  displayName: 'Pack Assembly'
   inputs:
     command: 'pack'
     packagesToPack: '**/assembly.nuspec'
-    versioningScheme: 'byBuildNumber'
+    versioningScheme: 'byEnvVar'
+    versionEnvVar: 'Version.Formatted'
 
 - task: NuGetAuthenticate@0
   displayName: 'NuGet Authenticate'
@@ -71,7 +65,6 @@ steps:
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
     nuGetFeedType: 'external'
     publishFeedCredentials: 'Colson Code Nuget'
-
 
 - task: CopyFiles@2
   displayName: 'Copy DevOps Artifacts to Artifact Staging'
