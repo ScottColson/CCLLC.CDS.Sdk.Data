@@ -8,8 +8,7 @@ namespace CCLLC.CDS.Sdk
     public class QueryExpressionBuilder<E> : FluentQuery<IQueryExpressionBuilder<E>,E>, IQueryExpressionBuilder<E> where E : Entity, new()
     {        
         public QueryExpressionBuilder() : base()
-        {
-            SearchValue = null;
+        {            
         }
 
         public QueryExpression Build()
@@ -19,7 +18,7 @@ namespace CCLLC.CDS.Sdk
 
         public IQueryExpressionBuilder<E> WithSearchValue(string searchValue)
         {
-            SearchValue = searchValue;
+            SetSearchValue(searchValue);
             return this;
         }
     }

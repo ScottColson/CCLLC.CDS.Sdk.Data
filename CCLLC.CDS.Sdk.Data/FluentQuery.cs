@@ -41,7 +41,7 @@ namespace CCLLC.CDS.Sdk
         
         private FluentQuerySettings<P,E> Settings { get; }
 
-        protected string SearchValue { get; set; }
+        protected string SearchValue { get; private set; }
 
         protected FluentQuery() : base()
         {
@@ -86,6 +86,15 @@ namespace CCLLC.CDS.Sdk
 
             return base.GetColumnSet();
         }
-                
+        
+        protected void SetSearchValue(string value)
+        {
+            if(value != null && (!value.EndsWith("*") || value.EndsWith("%")))
+            {
+                value += "*";
+            }
+
+            SearchValue = value;
+        }
     }
 }
