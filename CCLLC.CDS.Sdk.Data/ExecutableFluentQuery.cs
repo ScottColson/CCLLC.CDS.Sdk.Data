@@ -70,7 +70,7 @@ namespace CCLLC.CDS.Sdk
 
         public IExecutableFluentQuery<E> WithSearchValue(string searchValue)
         {
-            SearchValue = searchValue;
+            SetSearchValue(searchValue);
             return this;
         }
     }
