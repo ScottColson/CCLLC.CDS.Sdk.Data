@@ -15,6 +15,6 @@
     </dependencies>
   </metadata>
   <files>   
-    <file src="..\..\CCLLC.CDS.Sdk.Data\**\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
+    <file src="..\CCLLC.CDS.Sdk.Data\**\*.cs" target="content/App_Packages/CCLLC.CDS.Sdk.Data.$version$/" />
   </files>
 </package>
