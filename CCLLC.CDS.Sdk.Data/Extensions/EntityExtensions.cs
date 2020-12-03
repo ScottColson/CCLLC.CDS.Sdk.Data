@@ -131,7 +131,7 @@ namespace CCLLC.CDS.Sdk
 
                 record.Attributes.Add(aliasedKey, value);
    
-                if (key == idattribute)
+                if (aliasedKey == idattribute)
                 {
                     record.Id = (Guid)value;
                 }
