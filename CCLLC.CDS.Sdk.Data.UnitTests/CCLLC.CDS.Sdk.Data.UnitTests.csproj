@@ -121,12 +121,6 @@
     <Compile Include="Proxies\Entities\customeraddress.cs" />
     <Compile Include="Proxies\Entities\systemuser.cs" />
     <Compile Include="Proxies\GlobalEnums\MsdynAccountinvoiceaddress.cs" />
-    <Compile Include="Proxies\GlobalEnums\MsdynAccountvendorblockedstatus.cs" />
-    <Compile Include="Proxies\GlobalEnums\MsdynLanguage.cs" />
-    <Compile Include="Proxies\GlobalEnums\NewReplenishonday.cs" />
-    <Compile Include="Proxies\GlobalEnums\PsLanguages.cs" />
-    <Compile Include="Proxies\GlobalEnums\PsPatientbenefitquote.cs" />
-    <Compile Include="Proxies\GlobalEnums\PsPracticeapprovalstatus.cs" />
     <Compile Include="Proxies\GlobalEnums\SharepointsiteServicetype.cs" />
     <Compile Include="QuerySettingsTests.cs" />
     <Compile Include="SelectTests.cs" />
