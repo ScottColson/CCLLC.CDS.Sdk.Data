@@ -88,10 +88,11 @@ namespace CCLLC.CDS.Sdk
         }
         
         protected void SetSearchValue(string value)
-        {
-            if(value != null && (!value.EndsWith("*") || value.EndsWith("%")))
+        {   
+            if(value != null)
             {
-                value += "*";
+                value = value.TrimEnd('*', '%');
+                value += "%";
             }
 
             SearchValue = value;
