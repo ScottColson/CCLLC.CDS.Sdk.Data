@@ -167,12 +167,16 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
             protected override void Test(IOrganizationService service)
             {
                 var qryExpression = new QueryExpressionBuilder<Account>()
+                    .With.DatabaseLock(false)
+                    .With.RecordLimit(10)
                     .Select(cols => new { cols.AccountNumber, cols.Name })
                     .LeftJoin<Contact>("primarycontactid", "contactid", c => c
                         .InnerJoin<SystemUser>("ownerid","systemuserid", u => u
                             .With.Alias("owner")
                             .Select(cols => new { cols.SystemUserId } )))
                     .Build();
+
+                var parsed = qryExpression.ToReadableText();
 
                 var linkEntity = qryExpression.LinkEntities[0];
                 linkEntity = linkEntity.LinkEntities[0];
