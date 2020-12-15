@@ -55,6 +55,49 @@ namespace CCLLC.CDS.Sdk
         }
 
         /// <summary>
+        /// Checks the target for existence of any attribute not contained in the provided array of attribute names 
+        /// and returns true if at least one additional attributes exists.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="attributeNames"></param>
+        /// <returns></returns>
+        public static bool ContainsAnyOtherThan(this Entity target, params string[] attributeNames)
+        {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+
+            foreach (string k in target.Attributes.Keys)
+            {
+                if (!attributeNames.Contains(k))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Return an array of fields in the target that are not included in the passed in parameter value
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="attributeNames"></param>
+        /// <returns></returns>
+        public static string[] GetFeildsOtherThan(this Entity target, params string[] attributeNames)
+        {
+            _ = target ?? throw new ArgumentNullException(nameof(target));
+
+            var attributes = new List<string>();
+
+            foreach (string k in target.Attributes.Keys)
+            {
+                if (!attributeNames.Contains(k))
+                {
+                    attributes.Add(k);
+                }
+            }
+
+            return attributes.ToArray();
+        }
+
+        /// <summary>
         /// Retrieves an attribute from the entity with of the specified type and returns an 
         /// optionally specified default value if the attribute does not exist.
         /// </summary>
