@@ -10,11 +10,13 @@ namespace CCLLC.CDS.Sdk
         public IList<IFilter> Filters { get; }
         public IList<ICondition> Conditions { get; }
         protected IList<string> SearchFields { get; }
+        protected IList<string> DateSearchFields { get; }
         public virtual IFilterable<P> Parent { get; protected set; }
 
         protected Filterable()
         {
             SearchFields = new List<string>();
+            DateSearchFields = new List<string>();
             Filters = new List<IFilter>();
             Conditions = new List<ICondition>();           
         }
@@ -42,7 +44,7 @@ namespace CCLLC.CDS.Sdk
 
         protected virtual FilterExpression GenerateSearchFilter(string searchValue)
         {
-            if (SearchFields.Count <= 0 || searchValue is null)
+            if (searchValue is null || (SearchFields.Count <= 0 && DateSearchFields.Count <= 0))
                 return null;
 
             var searchFilter = new FilterExpression(LogicalOperator.Or);
@@ -51,7 +53,23 @@ namespace CCLLC.CDS.Sdk
                 searchFilter.AddCondition(new ConditionExpression(sf, ConditionOperator.Like, searchValue));
             }
 
+            DateTime searchDate = DateTime.MinValue;
+
+            if(TryConvertSearchValueToDate(searchValue, out searchDate))
+            {
+                foreach(var sf in DateSearchFields)
+                {
+                    searchFilter.AddCondition(new ConditionExpression(sf, ConditionOperator.On, searchDate));
+                }
+            }
+
             return searchFilter;
+        }
+
+        private bool TryConvertSearchValueToDate(string searchValue, out DateTime date)
+        {
+            var cleanString = searchValue.TrimEnd('%','*');
+            return DateTime.TryParse(cleanString, out date);
         }
     }
 }

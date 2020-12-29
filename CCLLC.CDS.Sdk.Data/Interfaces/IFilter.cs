@@ -27,5 +27,10 @@ namespace CCLLC.CDS.Sdk
         IFilter<P> WithSearchFields(params string[] fields);
 
         IFilter<P> WithSearchFields<E>(Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity;
+
+        IFilter<P> WithDateSearchFields(params string[] fields);
+
+        IFilter<P> WithDateSearchFields<E>(Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity;
+    
     }   
 }

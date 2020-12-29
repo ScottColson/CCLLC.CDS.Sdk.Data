@@ -95,6 +95,24 @@ namespace CCLLC.CDS.Sdk
             var fields = anonymousTypeInitializer.GetAttributeNamesArray<E>();
             return this.WithSearchFields(fields);
         }
+
+        public IFilter<P> WithDateSearchFields(params string[] fields)
+        {
+            foreach (var f in fields)
+            {
+                if (!DateSearchFields.Contains(f))
+                {
+                    DateSearchFields.Add(f);
+                }
+            }
+            return this;
+        }
+
+        public IFilter<P> WithDateSearchFields<E>(System.Linq.Expressions.Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity
+        {
+            var fields = anonymousTypeInitializer.GetAttributeNamesArray<E>();
+            return this.WithDateSearchFields(fields);
+        }
     }
 
 }
