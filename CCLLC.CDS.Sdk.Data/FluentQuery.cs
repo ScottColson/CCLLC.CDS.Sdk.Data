@@ -17,7 +17,7 @@ namespace CCLLC.CDS.Sdk
             public FluentQuerySettings(IFluentQuery parent)
             {
                 Parent = parent;
-                UseNoLock = true;
+                UseNoLock = false;
             }
 
             public P DatabaseLock(bool useLock = true)
