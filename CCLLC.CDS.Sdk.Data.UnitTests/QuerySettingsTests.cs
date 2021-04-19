@@ -14,17 +14,17 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
         [TestMethod]
         public void Test_QueryExpressionLock_Should_DefaultToNoLock()
         {
-            new QueryExpressionLock_Should_DefaultToNoLock().Test();
+            new QueryExpressionLock_Should_DefaultToNoLockFalse().Test();
         }
 
-        private class QueryExpressionLock_Should_DefaultToNoLock : TestMethodClassBase
+        private class QueryExpressionLock_Should_DefaultToNoLockFalse : TestMethodClassBase
         {      
             protected override void Test(IOrganizationService service)
             {
                 var qryExpression = new QueryExpressionBuilder<Account>()
                     .Build();
 
-                Assert.AreEqual(true, qryExpression.NoLock);
+                Assert.AreEqual(false, qryExpression.NoLock);
             }
         }
 
@@ -72,6 +72,29 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
         }
 
         #endregion WithDatabaseLock_Should_SetNoLockFalse
+
+        #region WithDatabaseLock_Should_SetNoLockTrue
+
+        [TestMethod]
+        public void Test_WithDatabaseLock_Should_SetNoLockTrue()
+        {
+            new WithDatabaseLock_Should_SetNoLockTrue().Test();
+        }
+
+        private class WithDatabaseLock_Should_SetNoLockTrue : TestMethodClassBase
+        {
+            protected override void Test(IOrganizationService service)
+            {
+                var qryExpression = new QueryExpressionBuilder<Account>()
+                    .With.DatabaseLock(false)
+                    .Build();
+
+                Assert.AreEqual(true, qryExpression.NoLock);
+            }
+        }
+
+        #endregion WithDatabaseLock_Should_SetNoLockTrue
+
 
         #region WithRecordLimit_Should_SetTopCount
 
