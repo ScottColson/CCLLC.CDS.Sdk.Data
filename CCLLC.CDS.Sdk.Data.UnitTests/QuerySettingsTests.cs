@@ -12,7 +12,7 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
         #region QueryExpressionLock_Should_DefaultToNoLock
 
         [TestMethod]
-        public void Test_QueryExpressionLock_Should_DefaultToNoLock()
+        public void Test_QueryExpressionLock_Should_DefaultToNoLockFalse()
         {
             new QueryExpressionLock_Should_DefaultToNoLockFalse().Test();
         }

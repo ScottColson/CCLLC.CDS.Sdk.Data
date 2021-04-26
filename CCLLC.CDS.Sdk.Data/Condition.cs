@@ -9,12 +9,20 @@ namespace CCLLC.CDS.Sdk
         protected string AttributeName { get; }
         protected ConditionOperator Operator { get; private set; }
         protected object Value { get; private set; }
-
+        private bool applyIfTrue = true;
 
         public Condition(IFilter<P> parent, string attributeName)
         {
             this.AttributeName = attributeName;
             this.Parent = parent;
+            this.applyIfTrue = true;
+        }
+
+        public Condition(IFilter<P> parent, string attributeName, bool whenTrue)
+        {
+            this.AttributeName = attributeName;
+            this.Parent = parent;
+            this.applyIfTrue = whenTrue;
         }
 
         public IFilter<P> Is<T>(ConditionOperator conditionOperator, params T[] values)
@@ -92,6 +100,8 @@ namespace CCLLC.CDS.Sdk
 
         private void AddToFilter(ConditionOperator conditionOperator)
         {
+            if (!applyIfTrue) return;
+            
             this.Operator = conditionOperator;
             this.Value = null;
             Parent.Conditions.Add(this);
@@ -99,6 +109,8 @@ namespace CCLLC.CDS.Sdk
        
         private void AddToFilter<T>(ConditionOperator conditionOperator, T value)
         {
+            if (!applyIfTrue) return;
+
             this.Operator = conditionOperator;
             this.Value = value;
             Parent.Conditions.Add(this);
@@ -106,7 +118,9 @@ namespace CCLLC.CDS.Sdk
 
         private void AddToFilter<T>(ConditionOperator conditionOperator, T[] values)
         {
-            if(conditionOperator == ConditionOperator.In)
+            if (!applyIfTrue) return;
+
+            if (conditionOperator == ConditionOperator.In)
             {
                 this.Operator = conditionOperator;
                 this.Value = values;

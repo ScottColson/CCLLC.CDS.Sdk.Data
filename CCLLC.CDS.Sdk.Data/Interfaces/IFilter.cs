@@ -24,6 +24,8 @@ namespace CCLLC.CDS.Sdk
 
         ICondition<P> Attribute(string name);
 
+        ICondition<P> Attribute(bool onlyWhenTrue, string name);
+
         IFilter<P> WithSearchFields(params string[] fields);
 
         IFilter<P> WithSearchFields<E>(Expression<Func<E, object>> anonymousTypeInitializer) where E : Entity;

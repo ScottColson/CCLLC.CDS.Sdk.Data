@@ -137,5 +137,35 @@ namespace CCLLC.CDS.Sdk.Data.UnitTest
 
         #endregion MultipleConditionValues_Should_CreateNestedOrFilter
 
+        #region ConditionalAttribute_Should_BeIgnored
+
+        [TestMethod]
+        public void Test_ConditionalAttribute_Should_BeIgnored()
+        {
+            new ConditionalAttribute_Should_BeIgnored().Test();
+        }
+
+        private class ConditionalAttribute_Should_BeIgnored : TestMethodClassBase
+        {
+            protected override void Test(IOrganizationService service)
+            {
+                var qryExpression = new QueryExpressionBuilder<Account>()
+                        .WhereAll(a => a
+                             .QuickFind()
+                             .IsActive()
+                             .Attribute(false, "accountnumber").IsEqualTo("test")
+                             .WhereAll(a1 => a1
+                                .Attribute("name").IsEqualTo("testname")))
+                        .Build();
+
+                var criteria = qryExpression.Criteria;
+
+                Assert.AreEqual(LogicalOperator.And, criteria.FilterOperator);
+                Assert.IsTrue(criteria.IsQuickFindFilter);
+                Assert.AreEqual(1, criteria.Conditions.Count);
+            }
+        }
+
+        #endregion WhereAll_Should_AddAndFilterToQueryExpression
     }
 }
