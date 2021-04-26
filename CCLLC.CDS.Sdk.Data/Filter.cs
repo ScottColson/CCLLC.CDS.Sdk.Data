@@ -78,6 +78,11 @@ namespace CCLLC.CDS.Sdk
             return new Condition<P>(this, name);
         }
 
+        public ICondition<P> Attribute(bool onlyWhenTrue, string name)
+        {
+            return new Condition<P>(this, name, onlyWhenTrue);
+        }
+
         public IFilter<P> WithSearchFields(params string[] fields)
         {
             foreach(var f in fields)
