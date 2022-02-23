@@ -15,6 +15,7 @@ namespace CCLLC.CDS.Sdk
         IFilter<P> IsNull();
         IFilter<P> IsNotNull();
         IFilter<P> IsEqualTo<T>(params T[] values);
+        IFilter<P> IsNotEqualTo<T>(params T[] values);
         IFilter<P> IsGreaterThanOrEqualTo<T>(T value);
         IFilter<P> IsGreaterThan<T>(T value);
         IFilter<P> IsLessThanOrEqualTo<T>(T value);
