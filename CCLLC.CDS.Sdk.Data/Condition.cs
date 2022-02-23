@@ -72,7 +72,7 @@ namespace CCLLC.CDS.Sdk
             //handle wild card conversion
             for(int i=0; i<values.Length; i++)
             {
-                if (values[i].Contains("*"))
+                if (values[i] != null && values[i].Contains("*"))
                 {
                     values[i] = values[i].Replace('*', '%');
                 }
