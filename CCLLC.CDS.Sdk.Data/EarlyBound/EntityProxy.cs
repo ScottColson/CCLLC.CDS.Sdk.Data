@@ -45,10 +45,12 @@ namespace CCLLC.CDS.Sdk.EarlyBound
     [System.Runtime.Serialization.DataContractAttribute()]
     public abstract partial class EntityProxy<T> : EntityProxy where T : EntityProxy
     {
-        protected EntityProxy(string logicalName) : base(logicalName)
+        protected EntityProxy(string logicalName) 
+            : base(logicalName)
         { }
 
-        protected EntityProxy(Entity original) : base(original)
+        protected EntityProxy(Entity original) 
+            : base(original)
         { }
 
         public T WithClearedChangeHistory()
@@ -168,9 +170,27 @@ namespace CCLLC.CDS.Sdk.EarlyBound
         public T GetPropertyValue<T>(string name)
         {
             if (this.Contains(name))
-            {
+            {               
+                // temporary fix related to issues in Xrm Unit Test with activity id and party id
+                var value = this.Attributes[name];
+                if(value is null)
+                {
+                    return default;
+                }
+
+                if (typeof(T) == typeof(Guid) && value.GetType() == typeof(EntityReference))
+                {
+                    return (T)(object)((EntityReference)value).Id;
+                }
+
+                if (typeof(T) == typeof(EntityReference) && value.GetType() != typeof(EntityReference))
+                {
+                    return default;
+                }
+
                 return (T)this.Attributes[name];
             }
+
             return default;
         }
         
