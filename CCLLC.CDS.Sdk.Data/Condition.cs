@@ -37,6 +37,12 @@ namespace CCLLC.CDS.Sdk
             return (IFilter<P>)Parent;
         }
 
+        public IFilter<P> IsNotEqualTo<T>(params T[] values)
+        {
+            AddToFilter<T>(ConditionOperator.NotEqual, values);
+            return (IFilter<P>)Parent;
+        }
+
         public IFilter<P> IsGreaterThan<T>(T value)
         {
             AddToFilter<T>(ConditionOperator.GreaterThan, value);           
